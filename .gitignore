@@ -1,0 +1,29 @@
+# ---------- .NET ----------
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+.vs/
+artifacts/
+
+# ---------- Node / frontend ----------
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+coverage/
+
+# ---------- Environment / secrets ----------
+.env
+.env.*
+!.env.example
+*.pfx
+
+# ---------- Editor / OS ----------
+.idea/
+.DS_Store
+Thumbs.db
+*.log

@@ -1,0 +1,109 @@
+schema: spec-driven
+
+context: |
+  PROJECT: Corporate Treasury & Cash Flow Management System.
+  A single-company, multi-subsidiary treasury system (portfolio project).
+  Each subsidiary has exactly one bank account. No multi-tenant support.
+
+  TECH STACK:
+  - Backend: .NET, Clean Architecture (Domain -> Application -> Infrastructure -> Api),
+    REST API. Four projects: Domain, Application, Infrastructure, Api.
+    Dependency rule: Api depends on Application depends on Domain. Infrastructure implements
+    interfaces owned by Domain/Application and is never depended upon by them (Dependency
+    Inversion Principle is mandatory — repository/service interfaces live in Domain or
+    Application, never in Infrastructure).
+  - No MediatR / formal CQRS pipeline. Application Services are called directly by Controllers.
+  - Database: PostgreSQL. Writes go through EF Core. Reads for reports/dashboards go through
+    Dapper with hand-optimized SQL (via an IReportQueryService interface).
+  - Background jobs: Hangfire (Postgres-backed storage) — used for async report generation.
+  - Frontend: React + TypeScript, shadcn/ui + Tailwind CSS for all componentization,
+    TanStack Query for server state, Zustand only for cross-feature UI state, React Hook Form
+    + Zod for forms/validation. Feature-based folder structure under src/features/.
+  - i18n: react-i18next, English + Portuguese (pt-BR), initial language detected from the
+    browser/OS locale, client-side-only persistence (no backend field, no account sync).
+  - Theming: light/dark mode via Tailwind's `dark:` class strategy, initial theme detected
+    from the OS `prefers-color-scheme`, client-side-only persistence. Both the language
+    switcher and the theme toggle live in the footer of the persistent side-menu App Shell
+    (features/app-shell) — this is a cross-cutting concern, every screen must respect the
+    active language and theme, it is not a per-capability decision.
+  - Local dev: Docker Compose (api, db, frontend, a named volume for generated report files).
+
+  LANGUAGE CONVENTION: everything technical is in English — entity/field names, endpoints,
+  code, commit messages, spec files.
+
+  RBAC (roles, exactly one per user):
+  - Manager: global (subsidiaryId = null) or one subsidiary. Full read/write within scope.
+    Global Manager sees/manages everything; Subsidiary Manager is restricted to one subsidiary.
+  - Editor: always tied to exactly one subsidiary (never null). Can create/edit LedgerEntry
+    within their own subsidiary only, while it's in the Open state.
+  - Auditor: global or one subsidiary. Strictly read-only — the backend must reject any
+    write attempt from this role regardless of frontend state.
+  A Manager/Auditor tied to a subsidiary is restricted to exactly that one subsidiary
+  (no support for "Manager of subsidiaries A and B but not C").
+
+  CORE ENTITIES: LedgerEntry, BankStatementImportBatch, BankStatementLine, User, Subsidiary,
+  BankAccount, Category (bound to Income/Expense type).
+
+  KEY BUSINESS RULES (full detail in docs/business-rules-formalization.md — always consult it
+  before implementing anything touching these entities):
+  - LedgerEntry state machine: Open -> Reconciled (auto or manual match, both go straight to
+    Reconciled, no approval needed) | Open -> PendingReconciliation (no match found) ->
+    PendingApproval (Editor submits mandatory justification) -> Reconciled (Manager approves,
+    no reason needed) or back to PendingReconciliation (Manager rejects, reason mandatory).
+    Reconciled -> PendingReconciliation also happens when a Manager rejects the whole import
+    batch it came from (single reason at batch level, no new per-entry justification needed).
+    Any state -> Deleted (Manager only, soft delete, reason always mandatory).
+    Editable by Editor only while Open. Manager may edit an Open entry directly.
+  - BankStatementImportBatch: Uploaded -> Processed | ProcessedWithErrors -> Rejected
+    (Manager, mandatory reason, terminal, all-or-nothing — no selective per-line invalidation
+    in MVP).
+  - User: Active <-> Inactive (Manager, soft, never physically deleted). Global Manager
+    creates any role/scope; Subsidiary Manager creates only Editor/Auditor within their own
+    subsidiary and can never elevate scope or role beyond that.
+  - Soft delete everywhere a delete is mentioned — never a physical DELETE on LedgerEntry
+    or User.
+
+  OUT OF SCOPE FOR MVP: multi-bank-per-subsidiary, multi-level approval, multi-tenant,
+  self-service password reset, email notifications, multi-currency, selective batch
+  invalidation. These are documented in docs/requirements-document.md, not forgotten.
+
+  CAPABILITIES (build order — each should map to one or more OpenSpec changes, in this
+  order; don't start a capability whose dependencies aren't at least stubbed):
+  1. project-bootstrap (scaffolding only — solution, React app, docker-compose; no
+     meaningful spec.md expected, real content lives in design.md/tasks.md)
+  2. app-shell (persistent side-menu layout, i18n, light/dark theming — cross-cutting,
+     needed by every other screen)
+  3. auth
+  4. subsidiaries
+  5. user-management
+  6. ledger-entries
+  7. bank-statement-import
+  8. reconciliation
+  9. audit-trail
+  10. reports
+
+  REFERENCE DOCS (read the relevant one before proposing or designing anything non-trivial):
+  - docs/requirements-document.md — actors, entities, MVP scope, roadmap.
+  - docs/business-rules-formalization.md — full state machine tables and transition guards.
+  - docs/technical-architecture.md — full backend/frontend architecture and folder structure.
+  - docs/development-workflow.md — git workflow, Definition of Done, testing-scope criteria.
+
+rules:
+  proposal:
+    - State explicitly which entity state transitions this change covers, referencing the
+      rule numbers from docs/business-rules-formalization.md (e.g. "covers rules 1, 2, 3 of
+      the LedgerEntry table; does NOT cover reconciliation-triggered transitions").
+    - State explicitly what is out of scope for this specific change, even if it's part of
+      the same capability — do not silently defer something without saying so.
+    - State the testing scope for this change per the criteria in
+      docs/development-workflow.md §4 (does it touch a state machine? does it expose a new
+      RBAC-sensitive endpoint? or is it presentation-only?).
+  specs:
+    - Use Given/When/Then scenario format.
+    - Every scenario touching RBAC must include which role(s) can and cannot perform the
+      action.
+  design:
+    - Explicitly name which of the four projects (Domain / Application / Infrastructure / Api)
+      each new class or interface belongs to, and which layer owns any new interface.
+    - "Confirm the read/write split: any report or dashboard query goes through
+      IReportQueryService (Dapper), not through the EF Core write model."
