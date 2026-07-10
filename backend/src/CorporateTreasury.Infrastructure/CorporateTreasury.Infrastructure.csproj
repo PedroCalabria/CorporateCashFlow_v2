@@ -13,6 +13,11 @@
     <PackageReference Include="Hangfire.Core" Version="1.8.23" />
     <PackageReference Include="Hangfire.NetCore" Version="1.8.23" />
     <PackageReference Include="Hangfire.PostgreSql" Version="1.21.1" />
+    <!-- PasswordHasher<T> (PBKDF2) in isolation — no full ASP.NET Core Identity stack
+         (no IdentityDbContext/UserManager). See design.md §D2. -->
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="9.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.7" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -21,6 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\CorporateTreasury.Domain\CorporateTreasury.Domain.csproj" />
     <ProjectReference Include="..\..\src\CorporateTreasury.Application\CorporateTreasury.Application.csproj" />
+    <!-- Infrastructure holds the concrete PBKDF2 hasher and JWT token service under test. -->
+    <ProjectReference Include="..\..\src\CorporateTreasury.Infrastructure\CorporateTreasury.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,9 @@
+using CorporateTreasury.Application.Interfaces;
+using CorporateTreasury.Application.Services;
+using CorporateTreasury.Domain.Interfaces;
+using CorporateTreasury.Infrastructure.Auth;
 using CorporateTreasury.Infrastructure.Persistence;
+using CorporateTreasury.Infrastructure.Persistence.Repositories;
 using Hangfire;
 using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +45,15 @@ public static class DependencyInjection
 
         // Background processing server — no jobs are defined in this change.
         services.AddHangfireServer();
+
+        // --- Auth (auth capability) ---
+        services.Configure<JwtOptions>(configuration.GetSection(JwtOptions.SectionName));
+
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddSingleton<IPasswordHasher, PasswordHasherAdapter>();
+        services.AddSingleton<ITokenService, JwtTokenService>();
+        services.AddScoped<AuthService>();
 
         return services;
     }

@@ -8,11 +8,11 @@ Defines the persistent application shell for CorporateCashFlow: a single App She
 
 ### Requirement: Persistent application layout
 
-The application SHALL render every screen inside a single persistent App Shell composed of a side menu (with a navigation area and a fixed footer) and a content outlet. The shell SHALL NOT be re-implemented or duplicated by individual screens; feature screens render inside its content outlet via routing.
+The application SHALL render every screen inside a single persistent App Shell composed of a side menu (with a navigation area and a fixed footer) and a content outlet. The shell SHALL NOT be re-implemented or duplicated by individual screens; feature screens render inside its content outlet via routing. The shell SHALL render the real authenticated user (identity from the `auth` capability); it SHALL NOT be reachable without an authenticated session.
 
 #### Scenario: Shell wraps the active screen
 
-- **GIVEN** the application is loaded
+- **GIVEN** the application is loaded and the user is authenticated
 - **WHEN** any route is displayed
 - **THEN** the side menu (navigation area + footer) is visible and the route's content renders inside the shell's content outlet
 
@@ -24,9 +24,10 @@ The application SHALL render every screen inside a single persistent App Shell c
 
 #### Scenario: Navigation area shows placeholders only
 
-- **GIVEN** no business capability has been implemented yet
-- **WHEN** the user views the navigation area
-- **THEN** it shows placeholder navigation entries (no real business screens), and the shell assumes a mocked current user since authentication does not exist yet
+- **GIVEN** no business capability (beyond auth) has been implemented yet
+- **WHEN** the authenticated user views the navigation area
+- **THEN** it shows placeholder navigation entries (no real business screens)
+- **AND** the shell displays the real signed-in user (the mocked current user has been removed)
 
 ### Requirement: Initial language detection
 

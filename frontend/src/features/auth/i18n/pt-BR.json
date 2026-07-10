@@ -1,0 +1,22 @@
+{
+  "title": "Entrar",
+  "subtitle": "Entre para acessar o Corporate Treasury.",
+  "email": {
+    "label": "E-mail",
+    "placeholder": "voce@exemplo.com"
+  },
+  "password": {
+    "label": "Senha"
+  },
+  "submit": "Entrar",
+  "submitting": "Entrando…",
+  "validation": {
+    "emailRequired": "O e-mail é obrigatório",
+    "emailInvalid": "Informe um e-mail válido",
+    "passwordRequired": "A senha é obrigatória"
+  },
+  "error": {
+    "invalid": "E-mail ou senha inválidos."
+  },
+  "logout": "Sair"
+}

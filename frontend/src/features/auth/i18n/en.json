@@ -1,0 +1,22 @@
+{
+  "title": "Sign in",
+  "subtitle": "Sign in to access Corporate Treasury.",
+  "email": {
+    "label": "Email",
+    "placeholder": "you@example.com"
+  },
+  "password": {
+    "label": "Password"
+  },
+  "submit": "Sign in",
+  "submitting": "Signing in…",
+  "validation": {
+    "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address",
+    "passwordRequired": "Password is required"
+  },
+  "error": {
+    "invalid": "Invalid email or password."
+  },
+  "logout": "Sign out"
+}
