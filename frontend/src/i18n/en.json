@@ -1,0 +1,14 @@
+{
+  "appName": "Corporate Treasury",
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "pt-BR": "Portuguese (Brazil)"
+  },
+  "theme": {
+    "label": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "toggle": "Toggle theme"
+  }
+}

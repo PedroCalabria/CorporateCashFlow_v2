@@ -1,0 +1,14 @@
+{
+  "appName": "Tesouraria Corporativa",
+  "language": {
+    "label": "Idioma",
+    "en": "Inglês",
+    "pt-BR": "Português (Brasil)"
+  },
+  "theme": {
+    "label": "Tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "toggle": "Alternar tema"
+  }
+}

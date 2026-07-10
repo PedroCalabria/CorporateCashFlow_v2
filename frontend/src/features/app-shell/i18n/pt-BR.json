@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "heading": "Navegação",
+    "dashboard": "Painel",
+    "ledgerEntries": "Lançamentos",
+    "reports": "Relatórios",
+    "settings": "Configurações"
+  },
+  "user": {
+    "role": "Conectado"
+  },
+  "home": {
+    "title": "Bem-vindo à Tesouraria Corporativa",
+    "subtitle": "Selecione um item do menu para começar. As telas de negócio chegam em mudanças posteriores."
+  }
+}

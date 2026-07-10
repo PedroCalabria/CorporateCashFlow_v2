@@ -1,0 +1,16 @@
+{
+  "nav": {
+    "heading": "Navigation",
+    "dashboard": "Dashboard",
+    "ledgerEntries": "Ledger Entries",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "user": {
+    "role": "Signed in"
+  },
+  "home": {
+    "title": "Welcome to Corporate Treasury",
+    "subtitle": "Select an item from the menu to get started. Business screens arrive in later changes."
+  }
+}
