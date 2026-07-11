@@ -36,9 +36,23 @@ The application SHALL render every screen inside a single persistent App Shell c
 - **WHEN** they view the navigation area
 - **THEN** the "Subsidiaries" link is NOT shown (it is Global-Manager-only)
 
+#### Scenario: Users link is real and shown to any Manager
+
+- **GIVEN** the `user-management` capability has been implemented
+- **AND** the signed-in user is a `Manager` (global or subsidiary-scoped)
+- **WHEN** they view the navigation area
+- **THEN** a real "Users" navigation link is shown, replacing its former placeholder
+- **AND** it navigates to the user-management screen
+
+#### Scenario: Users link hidden from Editors and Auditors
+
+- **GIVEN** the signed-in user is an `Editor` or `Auditor`
+- **WHEN** they view the navigation area
+- **THEN** the "Users" link is NOT shown (user management is Manager-only)
+
 #### Scenario: Not-yet-implemented capabilities remain placeholders
 
-- **GIVEN** capabilities beyond `auth` and `subsidiaries` have not been implemented yet
+- **GIVEN** capabilities beyond `auth`, `subsidiaries`, and `user-management` have not been implemented yet
 - **WHEN** the authenticated user views the navigation area
 - **THEN** those entries still appear as placeholders (no real business screens)
 - **AND** the shell displays the real signed-in user (the mocked current user has been removed)

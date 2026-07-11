@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { NavLink } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { isGlobalManager } from '@/features/auth/roles'
+import { isGlobalManager, isManager } from '@/features/auth/roles'
 import { useAuth } from '@/features/auth/use-auth'
 import { cn } from '@/lib/utils'
 import { LanguageSwitcher } from './LanguageSwitcher'
@@ -63,6 +63,24 @@ export function SideMenu() {
                 }
               >
                 {t('nav.subsidiaries')}
+              </NavLink>
+            </li>
+          )}
+          {/* Users — a real link, shown to any Manager (global or subsidiary-scoped). */}
+          {isManager(user) && (
+            <li>
+              <NavLink
+                to="/users"
+                className={({ isActive }) =>
+                  cn(
+                    'block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground',
+                    isActive
+                      ? 'bg-accent font-medium text-accent-foreground'
+                      : 'text-foreground/70',
+                  )
+                }
+              >
+                {t('nav.users')}
               </NavLink>
             </li>
           )}

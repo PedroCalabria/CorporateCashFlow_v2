@@ -59,6 +59,10 @@ public static class DependencyInjection
         services.AddScoped<ISubsidiaryRepository, SubsidiaryRepository>();
         services.AddScoped<SubsidiaryService>();
 
+        // --- User management (user-management capability) ---
+        services.AddSingleton<IInitialPasswordGenerator, InitialPasswordGenerator>();
+        services.AddScoped<UserManagementService>();
+
         return services;
     }
 }

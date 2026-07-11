@@ -12,5 +12,17 @@ public interface IUserRepository
 
     Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Users visible to the caller. When <paramref name="scopeSubsidiaryId"/> is null the caller is
+    /// global-scoped and all users are returned; otherwise only users of that subsidiary.
+    /// </summary>
+    Task<IReadOnlyList<User>> ListAsync(Guid? scopeSubsidiaryId, CancellationToken cancellationToken = default);
+
+    /// <summary>True if a user with this email already exists (case-insensitive lookup key is enforced by the store).</summary>
+    Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken = default);
+
     Task AddAsync(User user, CancellationToken cancellationToken = default);
+
+    /// <summary>Persist pending changes (creation, edits, activation flips, password resets).</summary>
+    Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

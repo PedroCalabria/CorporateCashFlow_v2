@@ -12,6 +12,12 @@ public interface IRefreshTokenRepository
 
     Task AddAsync(RefreshToken token, CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// Revoke every currently-active (non-revoked, non-expired) refresh token of a user and persist.
+    /// Used on a Manager-forced password reset so an old session cannot outlive the change.
+    /// </summary>
+    Task RevokeAllForUserAsync(Guid userId, CancellationToken cancellationToken = default);
+
     /// <summary>Persist pending changes (e.g. revocation flags set during rotation/logout).</summary>
     Task SaveChangesAsync(CancellationToken cancellationToken = default);
 }

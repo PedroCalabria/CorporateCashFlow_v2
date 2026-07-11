@@ -1,0 +1,69 @@
+{
+  "title": "Users",
+  "subtitle": "Manage user accounts, roles, and access.",
+  "loading": "Loading users…",
+  "empty": "No users yet. Create the first one to get started.",
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "roles": {
+    "Manager": "Manager",
+    "Editor": "Editor",
+    "Auditor": "Auditor"
+  },
+  "scope": {
+    "global": "Global",
+    "subsidiary": "Subsidiary"
+  },
+  "fields": {
+    "name": "Name",
+    "email": "Email",
+    "role": "Role",
+    "subsidiary": "Subsidiary",
+    "status": "Status",
+    "actions": "Actions",
+    "newPassword": "New password"
+  },
+  "actions": {
+    "new": "New user",
+    "create": "Create",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "done": "Done",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate",
+    "resetPassword": "Reset password",
+    "reset": "Reset"
+  },
+  "create": {
+    "title": "New user",
+    "createdTitle": "User created",
+    "passwordNotice": "This is the user's initial password. It is shown only once — copy it now and share it securely."
+  },
+  "edit": {
+    "title": "Edit user"
+  },
+  "reset": {
+    "title": "Reset password",
+    "notice": "Setting a new password signs the user out of any existing sessions."
+  },
+  "validation": {
+    "nameRequired": "Name is required.",
+    "emailRequired": "Email is required.",
+    "emailInvalid": "Enter a valid email address.",
+    "roleRequired": "Select a role.",
+    "editorNeedsSubsidiary": "An Editor must be assigned to a subsidiary.",
+    "passwordTooShort": "The password must be at least 8 characters.",
+    "passwordNeedsLetter": "The password must contain at least one letter.",
+    "passwordNeedsDigit": "The password must contain at least one digit."
+  },
+  "error": {
+    "loadFailed": "Could not load users.",
+    "saveFailed": "Could not save. Check the fields and try again — the email may already be in use, or the action is outside your scope.",
+    "actionFailed": "The action could not be completed.",
+    "forbidden": "You are not allowed to perform this action on this user."
+  }
+}

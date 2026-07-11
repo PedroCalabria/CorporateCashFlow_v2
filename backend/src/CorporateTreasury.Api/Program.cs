@@ -3,9 +3,11 @@ using System.Text;
 using CorporateTreasury.Api.Auth;
 using CorporateTreasury.Application.DTOs.Auth;
 using CorporateTreasury.Application.DTOs.Subsidiaries;
+using CorporateTreasury.Application.DTOs.Users;
 using CorporateTreasury.Application.Interfaces;
 using CorporateTreasury.Application.Validators.Auth;
 using CorporateTreasury.Application.Validators.Subsidiaries;
+using CorporateTreasury.Application.Validators.Users;
 using CorporateTreasury.Infrastructure;
 using CorporateTreasury.Infrastructure.Auth;
 using CorporateTreasury.Infrastructure.Persistence;
@@ -31,6 +33,9 @@ builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IValidator<LoginRequest>, LoginRequestValidator>();
 builder.Services.AddScoped<IValidator<CreateSubsidiaryRequest>, CreateSubsidiaryRequestValidator>();
 builder.Services.AddScoped<IValidator<UpdateSubsidiaryRequest>, UpdateSubsidiaryRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateUserRequest>, UpdateUserRequestValidator>();
+builder.Services.AddScoped<IValidator<ResetPasswordRequest>, ResetPasswordRequestValidator>();
 
 // --- JWT bearer authentication (auth capability) ---
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()
@@ -64,11 +69,15 @@ builder.Services
 // ICurrentUserService; RequireAuthenticatedUser makes anonymous requests 401 and failing-policy
 // (subsidiary-scoped) requests 403.
 builder.Services.AddScoped<IAuthorizationHandler, GlobalManagerHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, ManagerHandler>();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(AuthorizationPolicies.GlobalManager, policy => policy
         .RequireAuthenticatedUser()
         .AddRequirements(new GlobalManagerRequirement()));
+    options.AddPolicy(AuthorizationPolicies.Manager, policy => policy
+        .RequireAuthenticatedUser()
+        .AddRequirements(new ManagerRequirement()));
 });
 
 var app = builder.Build();

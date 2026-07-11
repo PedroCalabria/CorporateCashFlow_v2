@@ -11,6 +11,8 @@ import authEn from '@/features/auth/i18n/en.json'
 import authPtBR from '@/features/auth/i18n/pt-BR.json'
 import subsidiariesEn from '@/features/subsidiaries/i18n/en.json'
 import subsidiariesPtBR from '@/features/subsidiaries/i18n/pt-BR.json'
+import usersEn from '@/features/users/i18n/en.json'
+import usersPtBR from '@/features/users/i18n/pt-BR.json'
 
 /**
  * i18next setup (design.md §D4). One namespace per feature: `common` holds
@@ -28,12 +30,14 @@ export const resources = {
     'app-shell': appShellEn,
     auth: authEn,
     subsidiaries: subsidiariesEn,
+    users: usersEn,
   },
   'pt-BR': {
     common: commonPtBR,
     'app-shell': appShellPtBR,
     auth: authPtBR,
     subsidiaries: subsidiariesPtBR,
+    users: usersPtBR,
   },
 } as const
 
@@ -46,7 +50,7 @@ void i18n
     fallbackLng: 'en',
     load: 'currentOnly',
     defaultNS,
-    ns: ['common', 'app-shell', 'auth', 'subsidiaries'],
+    ns: ['common', 'app-shell', 'auth', 'subsidiaries', 'users'],
     interpolation: { escapeValue: false },
     detection: {
       order: ['localStorage', 'navigator'],

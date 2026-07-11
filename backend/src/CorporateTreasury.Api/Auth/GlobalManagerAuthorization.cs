@@ -12,6 +12,13 @@ public static class AuthorizationPolicies
     /// <c>subsidiaryId</c>) — may pass. A subsidiary-scoped token (any role) is forbidden.
     /// </summary>
     public const string GlobalManager = "GlobalManager";
+
+    /// <summary>
+    /// Any <c>Manager</c> (global or subsidiary-scoped) may pass; <c>Editor</c>/<c>Auditor</c> are
+    /// forbidden. Fine-grained scope (which Manager may act on which user) is enforced in the
+    /// Application service, not by this coarse gate.
+    /// </summary>
+    public const string Manager = "Manager";
 }
 
 /// <summary>Authorization requirement satisfied only by the Global Manager (design.md §D2).</summary>

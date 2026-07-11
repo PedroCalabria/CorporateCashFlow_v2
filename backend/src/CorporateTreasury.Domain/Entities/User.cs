@@ -40,4 +40,71 @@ public class User
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }
+
+    /// <summary>
+    /// Creates an <c>Active</c> user (the <c>user-management</c> creation path, business-rules §3
+    /// transition 1). Enforces the invariant that an <see cref="UserRole.Editor"/> is always tied
+    /// to a subsidiary. Who is <em>allowed</em> to create which role/scope is an authorization
+    /// concern owned by the Application layer, not here.
+    /// </summary>
+    public static User Create(string name, string email, string passwordHash, UserRole role, Guid? subsidiaryId)
+    {
+        GuardEditorHasSubsidiary(role, subsidiaryId);
+
+        var now = DateTime.UtcNow;
+        return new User
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Email = email,
+            PasswordHash = passwordHash,
+            Role = role,
+            SubsidiaryId = subsidiaryId,
+            IsActive = true,
+            CreatedAt = now,
+            UpdatedAt = now,
+        };
+    }
+
+    /// <summary>Edits role/scope (business-rules §3, transition 4), preserving the Editor invariant.</summary>
+    public void UpdateRoleAndScope(UserRole role, Guid? subsidiaryId)
+    {
+        GuardEditorHasSubsidiary(role, subsidiaryId);
+        Role = role;
+        SubsidiaryId = subsidiaryId;
+        Touch();
+    }
+
+    /// <summary>Soft-deactivate (business-rules §3, transition 2). Never a physical delete.</summary>
+    public void Deactivate()
+    {
+        IsActive = false;
+        Touch();
+    }
+
+    /// <summary>Reactivate a deactivated user (business-rules §3, transition 3).</summary>
+    public void Reactivate()
+    {
+        IsActive = true;
+        Touch();
+    }
+
+    /// <summary>Replace the stored password hash (Manager-forced reset). Never the plaintext.</summary>
+    public void SetPasswordHash(string passwordHash)
+    {
+        PasswordHash = passwordHash;
+        Touch();
+    }
+
+    private void Touch() => UpdatedAt = DateTime.UtcNow;
+
+    // An Editor is always subsidiary-scoped (docs/requirements-document.md §2). This is a
+    // last-resort domain guard; the Application validator surfaces the same rule as a 400.
+    private static void GuardEditorHasSubsidiary(UserRole role, Guid? subsidiaryId)
+    {
+        if (role == UserRole.Editor && subsidiaryId is null)
+        {
+            throw new ArgumentException("An Editor must be tied to a subsidiary.", nameof(subsidiaryId));
+        }
+    }
 }

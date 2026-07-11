@@ -1,0 +1,69 @@
+{
+  "title": "Usuários",
+  "subtitle": "Gerencie contas de usuário, papéis e acesso.",
+  "loading": "Carregando usuários…",
+  "empty": "Nenhum usuário ainda. Crie o primeiro para começar.",
+  "status": {
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "roles": {
+    "Manager": "Gerente",
+    "Editor": "Editor",
+    "Auditor": "Auditor"
+  },
+  "scope": {
+    "global": "Global",
+    "subsidiary": "Filial"
+  },
+  "fields": {
+    "name": "Nome",
+    "email": "E-mail",
+    "role": "Papel",
+    "subsidiary": "Filial",
+    "status": "Situação",
+    "actions": "Ações",
+    "newPassword": "Nova senha"
+  },
+  "actions": {
+    "new": "Novo usuário",
+    "create": "Criar",
+    "edit": "Editar",
+    "save": "Salvar",
+    "saving": "Salvando…",
+    "cancel": "Cancelar",
+    "done": "Concluir",
+    "deactivate": "Desativar",
+    "reactivate": "Reativar",
+    "resetPassword": "Redefinir senha",
+    "reset": "Redefinir"
+  },
+  "create": {
+    "title": "Novo usuário",
+    "createdTitle": "Usuário criado",
+    "passwordNotice": "Esta é a senha inicial do usuário. Ela é exibida apenas uma vez — copie-a agora e compartilhe com segurança."
+  },
+  "edit": {
+    "title": "Editar usuário"
+  },
+  "reset": {
+    "title": "Redefinir senha",
+    "notice": "Definir uma nova senha encerra todas as sessões existentes do usuário."
+  },
+  "validation": {
+    "nameRequired": "O nome é obrigatório.",
+    "emailRequired": "O e-mail é obrigatório.",
+    "emailInvalid": "Informe um e-mail válido.",
+    "roleRequired": "Selecione um papel.",
+    "editorNeedsSubsidiary": "Um Editor deve estar vinculado a uma filial.",
+    "passwordTooShort": "A senha deve ter pelo menos 8 caracteres.",
+    "passwordNeedsLetter": "A senha deve conter pelo menos uma letra.",
+    "passwordNeedsDigit": "A senha deve conter pelo menos um dígito."
+  },
+  "error": {
+    "loadFailed": "Não foi possível carregar os usuários.",
+    "saveFailed": "Não foi possível salvar. Verifique os campos e tente novamente — o e-mail pode já estar em uso, ou a ação está fora do seu escopo.",
+    "actionFailed": "A ação não pôde ser concluída.",
+    "forbidden": "Você não tem permissão para executar esta ação neste usuário."
+  }
+}

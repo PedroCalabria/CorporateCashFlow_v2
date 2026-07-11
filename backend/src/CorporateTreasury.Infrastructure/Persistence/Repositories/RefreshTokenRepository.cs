@@ -20,6 +20,22 @@ public sealed class RefreshTokenRepository : IRefreshTokenRepository
     public async Task AddAsync(RefreshToken token, CancellationToken cancellationToken = default) =>
         await _db.RefreshTokens.AddAsync(token, cancellationToken);
 
+    public async Task RevokeAllForUserAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        var now = DateTime.UtcNow;
+        // Revoke every still-active token (not revoked, not expired) of this user.
+        var active = await _db.RefreshTokens
+            .Where(t => t.UserId == userId && t.RevokedAt == null && t.ExpiresAt > now)
+            .ToListAsync(cancellationToken);
+
+        foreach (var token in active)
+        {
+            token.RevokedAt = now;
+        }
+
+        await _db.SaveChangesAsync(cancellationToken);
+    }
+
     public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
         _db.SaveChangesAsync(cancellationToken);
 }

@@ -5,6 +5,8 @@ import { LoginPage } from '@/features/auth/components/LoginPage'
 import { RequireAuth } from '@/features/auth/components/RequireAuth'
 import { RequireGlobalManager } from '@/features/subsidiaries/components/RequireGlobalManager'
 import { SubsidiariesListPage } from '@/features/subsidiaries/components/SubsidiariesListPage'
+import { RequireManager } from '@/features/users/components/RequireManager'
+import { UsersListPage } from '@/features/users/components/UsersListPage'
 
 /**
  * `/login` is a public route rendered OUTSIDE the shell. Everything under `/` is gated by
@@ -29,6 +31,10 @@ export const router = createBrowserRouter([
           {
             element: <RequireGlobalManager />,
             children: [{ path: 'subsidiaries', element: <SubsidiariesListPage /> }],
+          },
+          {
+            element: <RequireManager />,
+            children: [{ path: 'users', element: <UsersListPage /> }],
           },
         ],
       },
