@@ -9,14 +9,16 @@ import appShellEn from '@/features/app-shell/i18n/en.json'
 import appShellPtBR from '@/features/app-shell/i18n/pt-BR.json'
 import authEn from '@/features/auth/i18n/en.json'
 import authPtBR from '@/features/auth/i18n/pt-BR.json'
+import subsidiariesEn from '@/features/subsidiaries/i18n/en.json'
+import subsidiariesPtBR from '@/features/subsidiaries/i18n/pt-BR.json'
 
 /**
  * i18next setup (design.md §D4). One namespace per feature: `common` holds
  * shared strings, `app-shell` holds the shell's nav/footer/placeholder strings,
- * `auth` holds the login screen's labels/validation/errors. Detection order is
- * localStorage (saved preference) → navigator (browser/OS), with the detected
- * value cached back to localStorage under `ct.lang` so the choice survives a
- * reload without any account/server involvement.
+ * `auth` holds the login screen's strings, `subsidiaries` holds the subsidiary
+ * management screen's strings. Detection order is localStorage (saved preference)
+ * → navigator (browser/OS), with the detected value cached back to localStorage
+ * under `ct.lang` so the choice survives a reload without any account/server involvement.
  */
 export const defaultNS = 'common'
 
@@ -25,11 +27,13 @@ export const resources = {
     common: commonEn,
     'app-shell': appShellEn,
     auth: authEn,
+    subsidiaries: subsidiariesEn,
   },
   'pt-BR': {
     common: commonPtBR,
     'app-shell': appShellPtBR,
     auth: authPtBR,
+    subsidiaries: subsidiariesPtBR,
   },
 } as const
 
@@ -42,7 +46,7 @@ void i18n
     fallbackLng: 'en',
     load: 'currentOnly',
     defaultNS,
-    ns: ['common', 'app-shell', 'auth'],
+    ns: ['common', 'app-shell', 'auth', 'subsidiaries'],
     interpolation: { escapeValue: false },
     detection: {
       order: ['localStorage', 'navigator'],

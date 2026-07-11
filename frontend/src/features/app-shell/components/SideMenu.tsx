@@ -1,15 +1,17 @@
 import { useTranslation } from 'react-i18next'
+import { NavLink } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { isGlobalManager } from '@/features/auth/roles'
 import { useAuth } from '@/features/auth/use-auth'
+import { cn } from '@/lib/utils'
 import { LanguageSwitcher } from './LanguageSwitcher'
 import { ThemeToggle } from './ThemeToggle'
 
 /**
- * Placeholder navigation entries. No business screens exist yet, so these are
- * static labels (translated) with no real route targets — real capabilities
- * add their own entries and targets. See spec: "Navigation area shows
- * placeholders only".
+ * Placeholder navigation entries. These capabilities have no screen yet, so they are static
+ * labels (translated) with no route target — each real capability replaces its placeholder with
+ * a link. See spec: "Navigation area shows placeholders only".
  */
 const NAV_ITEM_KEYS = ['dashboard', 'ledgerEntries', 'reports', 'settings'] as const
 
@@ -40,12 +42,30 @@ export function SideMenu() {
         </div>
       </div>
 
-      {/* Navigation area (placeholders only). */}
+      {/* Navigation area: real capability links (RBAC-gated) plus remaining placeholders. */}
       <nav className="flex-1 overflow-y-auto p-3" aria-label={t('nav.heading')}>
         <p className="px-2 pb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           {t('nav.heading')}
         </p>
         <ul className="space-y-1">
+          {/* Subsidiaries — a real link, shown only to the Global Manager. */}
+          {isGlobalManager(user) && (
+            <li>
+              <NavLink
+                to="/subsidiaries"
+                className={({ isActive }) =>
+                  cn(
+                    'block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground',
+                    isActive
+                      ? 'bg-accent font-medium text-accent-foreground'
+                      : 'text-foreground/70',
+                  )
+                }
+              >
+                {t('nav.subsidiaries')}
+              </NavLink>
+            </li>
+          )}
           {NAV_ITEM_KEYS.map((key) => (
             <li key={key}>
               <span className="block cursor-default rounded-md px-3 py-2 text-sm text-foreground/70 hover:bg-accent hover:text-accent-foreground">

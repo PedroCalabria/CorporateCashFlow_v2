@@ -55,6 +55,10 @@ public static class DependencyInjection
         services.AddSingleton<ITokenService, JwtTokenService>();
         services.AddScoped<AuthService>();
 
+        // --- Subsidiaries (subsidiaries capability) ---
+        services.AddScoped<ISubsidiaryRepository, SubsidiaryRepository>();
+        services.AddScoped<SubsidiaryService>();
+
         return services;
     }
 }

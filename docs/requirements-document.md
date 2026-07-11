@@ -36,7 +36,7 @@ This is a fictional scenario built for portfolio purposes. The system solves the
 - A user has **exactly one role** at a time (no role stacking).
 - If a Manager or Auditor has a `subsidiaryId`, they are restricted to that single subsidiary — there is no support for "Manager of subsidiaries A and B, but not C." This is an intentional simplification.
 - **User creation rights:**
-  - Only the **Global Manager** can create Subsidiaries.
+  - Only the **Global Manager** can create, edit, and deactivate (soft-delete) Subsidiaries. Deactivation is blocked while the subsidiary has active users or non-terminal `LedgerEntry` records (see §3.1).
   - Only the **Global Manager** can create new **Manager** users (global or subsidiary-scoped).
   - A **Subsidiary Manager** can create Editor/Auditor users, restricted to their own subsidiary.
 
@@ -48,8 +48,9 @@ This is a fictional scenario built for portfolio purposes. The system solves the
 | Field | Notes |
 |---|---|
 | Id | |
-| Name | |
-| Code | Short identifier |
+| Name | Editable by Global Manager |
+| Code | Short identifier, editable by Global Manager |
+| IsActive | Soft-delete flag. Deactivation is only allowed when the subsidiary has **no active `User`** assigned to it and **no `LedgerEntry` in a non-terminal state** (i.e. everything is either `Reconciled` or `Deleted`) — an integrity guard, not a free toggle |
 | CreatedAt | |
 
 ### 3.2 `BankAccount`
@@ -59,8 +60,10 @@ One-to-one relationship with Subsidiary.
 |---|---|
 | Id | |
 | SubsidiaryId | 1:1 |
-| InitialBalance | Starting point for balance calculation |
-| ReferenceDate | Date the InitialBalance was recorded, set by a Manager |
+| InitialBalance | Starting point for balance calculation. **Immutable after creation** — never exposed on any update endpoint |
+| ReferenceDate | Date the InitialBalance was recorded, set by a Manager at creation time. **Immutable after creation**, same reasoning |
+
+**Correcting a wrong initial balance**: never done by editing this record — a `LedgerEntry` with category `Balance Correction (Increase)` or `Balance Correction (Decrease)` is posted instead (see §3.5). This keeps the balance history append-only and auditable, which is central to the system's reconciliation guarantees — retroactively editing a baseline value would silently invalidate every balance already reported and reconciled against it.
 
 ### 3.3 `User`
 | Field | Notes |
@@ -93,8 +96,10 @@ One-to-one relationship with Subsidiary.
 ### 3.5 `Category`
 Fixed catalog, each bound to a `Type` (Income / Expense) so reports can aggregate automatically:
 
-**Income:** Sales Revenue, Other Revenue
-**Expense:** Suppliers, Payroll, Taxes, Administrative Expenses, Financial Expenses, Investments, Loans/Financing, Other Expenses
+**Income:** Sales Revenue, Other Revenue, Balance Correction (Increase)
+**Expense:** Suppliers, Payroll, Taxes, Administrative Expenses, Financial Expenses, Investments, Loans/Financing, Other Expenses, Balance Correction (Decrease)
+
+`Balance Correction (Increase/Decrease)` are the only sanctioned way to fix a wrong `BankAccount.InitialBalance` — see §3.2 note below. They are ordinary `LedgerEntry` records like any other, subject to the same reconciliation lifecycle.
 
 ### 3.6 `BankStatementImportBatch`
 Represents one uploaded spreadsheet file.

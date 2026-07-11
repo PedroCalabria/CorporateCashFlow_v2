@@ -1,0 +1,46 @@
+{
+  "title": "Filiais",
+  "subtitle": "Gerencie as filiais da empresa e suas contas bancárias.",
+  "loading": "Carregando filiais…",
+  "empty": "Nenhuma filial ainda. Crie a primeira para começar.",
+  "status": {
+    "active": "Ativa",
+    "inactive": "Inativa"
+  },
+  "fields": {
+    "name": "Nome",
+    "code": "Código",
+    "initialBalance": "Saldo inicial",
+    "referenceDate": "Data de referência",
+    "status": "Situação",
+    "actions": "Ações"
+  },
+  "actions": {
+    "new": "Nova filial",
+    "create": "Criar",
+    "edit": "Editar",
+    "save": "Salvar",
+    "saving": "Salvando…",
+    "cancel": "Cancelar",
+    "deactivate": "Desativar",
+    "reactivate": "Reativar"
+  },
+  "create": {
+    "title": "Nova filial"
+  },
+  "edit": {
+    "title": "Editar filial"
+  },
+  "validation": {
+    "nameRequired": "O nome é obrigatório.",
+    "codeRequired": "O código é obrigatório.",
+    "balanceInvalid": "Informe um valor válido.",
+    "referenceDateRequired": "A data de referência é obrigatória."
+  },
+  "error": {
+    "loadFailed": "Não foi possível carregar as filiais.",
+    "saveFailed": "Não foi possível salvar. Verifique os campos e tente novamente — o código pode já estar em uso.",
+    "actionFailed": "A ação não pôde ser concluída.",
+    "hasActiveUsers": "Esta filial não pode ser desativada enquanto houver usuários ativos vinculados a ela."
+  }
+}

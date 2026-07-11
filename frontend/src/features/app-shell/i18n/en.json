@@ -1,6 +1,7 @@
 {
   "nav": {
     "heading": "Navigation",
+    "subsidiaries": "Subsidiaries",
     "dashboard": "Dashboard",
     "ledgerEntries": "Ledger Entries",
     "reports": "Reports",

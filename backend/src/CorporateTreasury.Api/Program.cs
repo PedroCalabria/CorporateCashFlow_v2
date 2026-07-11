@@ -2,14 +2,17 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using CorporateTreasury.Api.Auth;
 using CorporateTreasury.Application.DTOs.Auth;
+using CorporateTreasury.Application.DTOs.Subsidiaries;
 using CorporateTreasury.Application.Interfaces;
 using CorporateTreasury.Application.Validators.Auth;
+using CorporateTreasury.Application.Validators.Subsidiaries;
 using CorporateTreasury.Infrastructure;
 using CorporateTreasury.Infrastructure.Auth;
 using CorporateTreasury.Infrastructure.Persistence;
 using FluentValidation;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -26,6 +29,8 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IValidator<LoginRequest>, LoginRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateSubsidiaryRequest>, CreateSubsidiaryRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateSubsidiaryRequest>, UpdateSubsidiaryRequestValidator>();
 
 // --- JWT bearer authentication (auth capability) ---
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()
@@ -55,7 +60,16 @@ builder.Services
         };
     });
 
-builder.Services.AddAuthorization();
+// Global-Manager-only policy for the subsidiaries capability (design.md §D2). The handler reads
+// ICurrentUserService; RequireAuthenticatedUser makes anonymous requests 401 and failing-policy
+// (subsidiary-scoped) requests 403.
+builder.Services.AddScoped<IAuthorizationHandler, GlobalManagerHandler>();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(AuthorizationPolicies.GlobalManager, policy => policy
+        .RequireAuthenticatedUser()
+        .AddRequirements(new GlobalManagerRequirement()));
+});
 
 var app = builder.Build();
 

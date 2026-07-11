@@ -81,7 +81,27 @@ Physical deletion is never permitted for `User`.
 
 ---
 
-## 4. Audit Trail Mapping
+## 4. `Subsidiary` State Machine
+
+| State | Meaning |
+|---|---|
+| `Active` | Normal operation; can have users assigned and `LedgerEntry` records posted |
+| `Inactive` | Soft-deactivated; blocked from new user assignment and new `LedgerEntry` creation |
+
+| # | From | To | Trigger | Actor | Guard |
+|---|---|---|---|---|---|
+| 1 | — | `Active` | Subsidiary created (with its `BankAccount`: `InitialBalance` + `ReferenceDate`) | Global Manager only | — |
+| 2 | `Active` | `Active` | Edit `Name`/`Code` | Global Manager only | — |
+| 3 | `Active` | `Inactive` | Deactivate | Global Manager only | **No active `User`** currently assigned to this subsidiary, **and** no `LedgerEntry` in a non-terminal state (`Open`, `PendingReconciliation`, or `PendingApproval`) — everything must already be `Reconciled` or `Deleted` |
+| 4 | `Inactive` | `Active` | Reactivate | Global Manager only | — |
+
+**`BankAccount.InitialBalance` and `ReferenceDate` are immutable once created** — no transition or edit path exists for them at all, by design. Correcting a wrong value is done via a `LedgerEntry` with category `Balance Correction (Increase)` or `Balance Correction (Decrease)`, following the normal `LedgerEntry` lifecycle (§1) like any other entry. This keeps the balance calculation append-only and prevents a retroactive edit from silently invalidating balances that were already reported or reconciled.
+
+Physical deletion is never permitted for `Subsidiary`.
+
+---
+
+## 5. Audit Trail Mapping
 
 | Log | Captures | Populated fields |
 |---|---|---|
@@ -92,7 +112,7 @@ The audit trail screen presents these as two separate tabs (Ledger activity / Ac
 
 ---
 
-## 5. Resolved Decisions (Phase 2 validation)
+## 6. Resolved Decisions (Phase 2 validation)
 
 | # | Decision | Resolution |
 |---|---|---|

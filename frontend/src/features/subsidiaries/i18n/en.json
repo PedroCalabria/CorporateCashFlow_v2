@@ -1,0 +1,46 @@
+{
+  "title": "Subsidiaries",
+  "subtitle": "Manage the company's subsidiaries and their bank accounts.",
+  "loading": "Loading subsidiaries…",
+  "empty": "No subsidiaries yet. Create the first one to get started.",
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "fields": {
+    "name": "Name",
+    "code": "Code",
+    "initialBalance": "Initial balance",
+    "referenceDate": "Reference date",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "actions": {
+    "new": "New subsidiary",
+    "create": "Create",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate"
+  },
+  "create": {
+    "title": "New subsidiary"
+  },
+  "edit": {
+    "title": "Edit subsidiary"
+  },
+  "validation": {
+    "nameRequired": "Name is required.",
+    "codeRequired": "Code is required.",
+    "balanceInvalid": "Enter a valid amount.",
+    "referenceDateRequired": "Reference date is required."
+  },
+  "error": {
+    "loadFailed": "Could not load subsidiaries.",
+    "saveFailed": "Could not save. Check the fields and try again — the code may already be in use.",
+    "actionFailed": "The action could not be completed.",
+    "hasActiveUsers": "This subsidiary cannot be deactivated while active users are still assigned to it."
+  }
+}

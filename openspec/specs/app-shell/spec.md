@@ -8,7 +8,7 @@ Defines the persistent application shell for CorporateCashFlow: a single App She
 
 ### Requirement: Persistent application layout
 
-The application SHALL render every screen inside a single persistent App Shell composed of a side menu (with a navigation area and a fixed footer) and a content outlet. The shell SHALL NOT be re-implemented or duplicated by individual screens; feature screens render inside its content outlet via routing. The shell SHALL render the real authenticated user (identity from the `auth` capability); it SHALL NOT be reachable without an authenticated session.
+The application SHALL render every screen inside a single persistent App Shell composed of a side menu (with a navigation area and a fixed footer) and a content outlet. The shell SHALL NOT be re-implemented or duplicated by individual screens; feature screens render inside its content outlet via routing. The shell SHALL render the real authenticated user (identity from the `auth` capability); it SHALL NOT be reachable without an authenticated session. The navigation area SHALL show a **real** link for each implemented business capability and a placeholder for each not-yet-implemented one; a real link SHALL respect its capability's RBAC visibility and SHALL NOT be shown to a user who is not authorized to use it.
 
 #### Scenario: Shell wraps the active screen
 
@@ -22,11 +22,25 @@ The application SHALL render every screen inside a single persistent App Shell c
 - **WHEN** the user views the side-menu footer
 - **THEN** both the language switcher and the theme toggle are present there, visible from any screen
 
-#### Scenario: Navigation area shows placeholders only
+#### Scenario: Subsidiaries link is real and Global-Manager-only
 
-- **GIVEN** no business capability (beyond auth) has been implemented yet
+- **GIVEN** the `subsidiaries` capability has been implemented
+- **AND** the signed-in user is a Global Manager (`Manager` role, null `subsidiaryId`)
+- **WHEN** they view the navigation area
+- **THEN** a real "Subsidiaries" navigation link is shown, replacing its former placeholder
+- **AND** it navigates to the subsidiary-management screen
+
+#### Scenario: Subsidiaries link hidden from subsidiary-scoped users
+
+- **GIVEN** the signed-in user has a non-null `subsidiaryId` (any role)
+- **WHEN** they view the navigation area
+- **THEN** the "Subsidiaries" link is NOT shown (it is Global-Manager-only)
+
+#### Scenario: Not-yet-implemented capabilities remain placeholders
+
+- **GIVEN** capabilities beyond `auth` and `subsidiaries` have not been implemented yet
 - **WHEN** the authenticated user views the navigation area
-- **THEN** it shows placeholder navigation entries (no real business screens)
+- **THEN** those entries still appear as placeholders (no real business screens)
 - **AND** the shell displays the real signed-in user (the mocked current user has been removed)
 
 ### Requirement: Initial language detection

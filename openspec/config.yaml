@@ -60,6 +60,12 @@ context: |
   - User: Active <-> Inactive (Manager, soft, never physically deleted). Global Manager
     creates any role/scope; Subsidiary Manager creates only Editor/Auditor within their own
     subsidiary and can never elevate scope or role beyond that.
+  - Subsidiary: Active <-> Inactive (Global Manager only, soft, never physically deleted).
+    Deactivation requires no active User assigned to it and no LedgerEntry in a non-terminal
+    state. Name/Code are editable; BankAccount.InitialBalance and ReferenceDate are
+    IMMUTABLE after creation, by design — never exposed on any update endpoint. Correcting a
+    wrong initial balance is done via a LedgerEntry with category "Balance Correction
+    (Increase)" or "Balance Correction (Decrease)", never by editing the baseline.
   - Soft delete everywhere a delete is mentioned — never a physical DELETE on LedgerEntry
     or User.
 

@@ -6,8 +6,9 @@ namespace CorporateTreasury.Infrastructure.Persistence.Configurations;
 
 /// <summary>
 /// EF Core mapping for <see cref="User"/>. Email is unique (login lookup key). The role is
-/// stored as its string name for readable, migration-stable values. No <c>Subsidiary</c> FK
-/// yet — <c>SubsidiaryId</c> is a plain nullable value until the subsidiaries capability adds one.
+/// stored as its string name for readable, migration-stable values. <c>SubsidiaryId</c> is now
+/// a real (nullable) foreign key to <c>Subsidiaries</c>, wired by the subsidiaries capability;
+/// there is no navigation property by design (the User aggregate stays lean).
 /// </summary>
 public sealed class UserConfiguration : IEntityTypeConfiguration<User>
 {
@@ -36,6 +37,14 @@ public sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(50);
 
         builder.Property(u => u.SubsidiaryId);
+
+        // Real FK to Subsidiaries (added with the subsidiaries capability). No navigation
+        // property — the FK is enough. Restrict so a subsidiary with users cannot be hard-deleted
+        // (subsidiaries are soft-deactivated anyway, guarded by the active-user check).
+        builder.HasOne<Subsidiary>()
+            .WithMany()
+            .HasForeignKey(u => u.SubsidiaryId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(u => u.IsActive)
             .IsRequired();
