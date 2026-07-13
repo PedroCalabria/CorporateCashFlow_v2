@@ -1,10 +1,14 @@
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { CurrencyInput } from '@/components/ui/currency-input'
+import { hasFieldError } from '@/lib/api-error'
+import { todayIso } from '@/lib/date'
 import { useCreateSubsidiary } from '../hooks/use-subsidiaries'
 import { createSubsidiarySchema, type CreateSubsidiaryFormValues } from '../schema'
+import { subsidiaryControlClass } from './control-styles'
 import { FormField } from './fields'
 import { Modal } from './Modal'
 
@@ -19,6 +23,7 @@ export function CreateSubsidiaryDialog({ onClose }: { onClose: () => void }) {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<CreateSubsidiaryFormValues>({
@@ -31,9 +36,15 @@ export function CreateSubsidiaryDialog({ onClose }: { onClose: () => void }) {
     try {
       await createSubsidiary.mutateAsync(values)
       onClose()
-    } catch {
-      // Most likely a duplicate code (400); show a single form-level message.
-      setFormError(t('error.saveFailed'))
+    } catch (error) {
+      // Map the backend's field-keyed ValidationProblemDetails to a specific message.
+      if (hasFieldError(error, 'ReferenceDate')) {
+        setFormError(t('error.referenceDateFuture'))
+      } else if (hasFieldError(error, 'Code')) {
+        setFormError(t('error.codeInUse'))
+      } else {
+        setFormError(t('error.saveFailed'))
+      }
     }
   }
 
@@ -52,18 +63,28 @@ export function CreateSubsidiaryDialog({ onClose }: { onClose: () => void }) {
           error={errors.code}
           registration={register('code')}
         />
-        <FormField
-          id="initialBalance"
-          label={t('fields.initialBalance')}
-          type="number"
-          step="0.01"
-          error={errors.initialBalance}
-          registration={register('initialBalance')}
-        />
+        <FormField id="initialBalance" label={t('fields.initialBalance')} error={errors.initialBalance}>
+          <Controller
+            control={control}
+            name="initialBalance"
+            render={({ field }) => (
+              <CurrencyInput
+                id="initialBalance"
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                className={subsidiaryControlClass(!!errors.initialBalance)}
+                allowNegative
+              />
+            )}
+          />
+        </FormField>
         <FormField
           id="referenceDate"
           label={t('fields.referenceDate')}
           type="date"
+          max={todayIso()}
           error={errors.referenceDate}
           registration={register('referenceDate')}
         />

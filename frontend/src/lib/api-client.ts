@@ -32,7 +32,7 @@ apiClient.interceptors.request.use((config: AuthRequestConfig) => {
 // De-duplicate concurrent refreshes: all 401s share the one in-flight refresh promise.
 let refreshPromise: Promise<string> | null = null
 
-function refreshAccessToken(): Promise<string> {
+export function refreshAccessToken(): Promise<string> {
   if (!refreshPromise) {
     refreshPromise = apiClient
       .post<{ accessToken: string }>('/auth/refresh', undefined, {

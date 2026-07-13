@@ -83,6 +83,7 @@
     "amountInvalid": "Informe um valor válido.",
     "amountPositive": "O valor deve ser maior que zero.",
     "dateRequired": "A data é obrigatória.",
+    "dateNotFuture": "A data não pode ser futura.",
     "descriptionRequired": "A descrição é obrigatória.",
     "descriptionTooLong": "A descrição é muito longa.",
     "reasonRequired": "O motivo é obrigatório.",

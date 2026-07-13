@@ -35,11 +35,14 @@
     "nameRequired": "Name is required.",
     "codeRequired": "Code is required.",
     "balanceInvalid": "Enter a valid amount.",
-    "referenceDateRequired": "Reference date is required."
+    "referenceDateRequired": "Reference date is required.",
+    "referenceDateFuture": "The reference date cannot be in the future."
   },
   "error": {
     "loadFailed": "Could not load subsidiaries.",
-    "saveFailed": "Could not save. Check the fields and try again — the code may already be in use.",
+    "saveFailed": "Could not save. Check the fields and try again.",
+    "codeInUse": "A subsidiary with this code already exists.",
+    "referenceDateFuture": "The reference date cannot be in the future.",
     "actionFailed": "The action could not be completed.",
     "hasActiveUsers": "This subsidiary cannot be deactivated while active users are still assigned to it."
   }

@@ -83,6 +83,7 @@
     "amountInvalid": "Enter a valid amount.",
     "amountPositive": "The amount must be greater than zero.",
     "dateRequired": "A date is required.",
+    "dateNotFuture": "The date cannot be in the future.",
     "descriptionRequired": "A description is required.",
     "descriptionTooLong": "The description is too long.",
     "reasonRequired": "A reason is required.",

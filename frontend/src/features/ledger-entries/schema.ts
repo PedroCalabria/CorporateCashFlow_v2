@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { todayIso } from '@/lib/date'
 
 /**
  * Form schemas for the ledger-entries screens. Messages are i18n keys (resolved in the
@@ -8,7 +9,10 @@ import { z } from 'zod'
 const entryFields = {
   categoryId: z.string().min(1, 'validation.categoryRequired'),
   amount: z.coerce.number({ invalid_type_error: 'validation.amountInvalid' }).positive('validation.amountPositive'),
-  date: z.string().min(1, 'validation.dateRequired'),
+  date: z
+    .string()
+    .min(1, 'validation.dateRequired')
+    .refine((value) => value <= todayIso(), 'validation.dateNotFuture'),
   description: z.string().min(1, 'validation.descriptionRequired').max(500, 'validation.descriptionTooLong'),
 }
 

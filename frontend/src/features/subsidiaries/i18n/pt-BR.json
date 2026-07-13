@@ -35,11 +35,14 @@
     "nameRequired": "O nome é obrigatório.",
     "codeRequired": "O código é obrigatório.",
     "balanceInvalid": "Informe um valor válido.",
-    "referenceDateRequired": "A data de referência é obrigatória."
+    "referenceDateRequired": "A data de referência é obrigatória.",
+    "referenceDateFuture": "A data de referência não pode ser futura."
   },
   "error": {
     "loadFailed": "Não foi possível carregar as filiais.",
-    "saveFailed": "Não foi possível salvar. Verifique os campos e tente novamente — o código pode já estar em uso.",
+    "saveFailed": "Não foi possível salvar. Verifique os campos e tente novamente.",
+    "codeInUse": "Já existe uma filial com este código.",
+    "referenceDateFuture": "A data de referência não pode ser futura.",
     "actionFailed": "A ação não pôde ser concluída.",
     "hasActiveUsers": "Esta filial não pode ser desativada enquanto houver usuários ativos vinculados a ela."
   }

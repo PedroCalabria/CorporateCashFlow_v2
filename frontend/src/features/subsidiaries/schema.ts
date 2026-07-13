@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { todayIso } from '@/lib/date'
 
 /**
  * Form schemas for the subsidiaries screens. Messages are i18n keys (resolved in the
@@ -10,7 +11,10 @@ export const createSubsidiarySchema = z.object({
   name: z.string().min(1, 'validation.nameRequired'),
   code: z.string().min(1, 'validation.codeRequired'),
   initialBalance: z.coerce.number({ invalid_type_error: 'validation.balanceInvalid' }),
-  referenceDate: z.string().min(1, 'validation.referenceDateRequired'),
+  referenceDate: z
+    .string()
+    .min(1, 'validation.referenceDateRequired')
+    .refine((value) => value <= todayIso(), 'validation.referenceDateFuture'),
 })
 
 export const updateSubsidiarySchema = z.object({

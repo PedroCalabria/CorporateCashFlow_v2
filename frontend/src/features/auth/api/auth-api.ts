@@ -1,4 +1,4 @@
-import { apiClient } from '@/lib/api-client'
+import { apiClient, refreshAccessToken } from '@/lib/api-client'
 import { setAccessToken } from '../token-store'
 import type { CurrentUser, LoginResponse } from '../types'
 
@@ -14,15 +14,14 @@ export async function login(email: string, password: string): Promise<string> {
 }
 
 /**
- * Attempt to restore a session from the HttpOnly refresh cookie. Marked `skipAuthRefresh`
- * so a 401 here does not recurse through the interceptor's refresh path.
+ * Attempt to restore a session from the HttpOnly refresh cookie. Delegates to the api-client's
+ * single-flight `refreshAccessToken` so this boot-time call and any concurrent 401-driven refresh
+ * share ONE in-flight request — critical because React StrictMode invokes the boot effect twice;
+ * without sharing, two concurrent refreshes carry the same cookie, the server rotates it on the
+ * first and rejects (and clears the cookie for) the second, logging the user out on reload.
  */
-export async function refresh(): Promise<string> {
-  const { data } = await apiClient.post<LoginResponse>('/auth/refresh', undefined, {
-    skipAuthRefresh: true,
-  } as never)
-  setAccessToken(data.accessToken)
-  return data.accessToken
+export function refresh(): Promise<string> {
+  return refreshAccessToken()
 }
 
 export async function getCurrentUser(): Promise<CurrentUser> {

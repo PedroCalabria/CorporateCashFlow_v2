@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { CurrencyInput } from '@/components/ui/currency-input'
+import { todayIso } from '@/lib/date'
 import { useCategories, useUpdateLedgerEntry } from '../hooks/use-ledger-entries'
 import { updateLedgerEntrySchema, type UpdateLedgerEntryFormValues } from '../schema'
 import type { LedgerEntry } from '../types'
@@ -19,6 +21,7 @@ export function EditLedgerEntryDialog({ entry, onClose }: { entry: LedgerEntry; 
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<UpdateLedgerEntryFormValues>({
@@ -55,11 +58,24 @@ export function EditLedgerEntryDialog({ entry, onClose }: { entry: LedgerEntry; 
         </Field>
 
         <Field id="amount" label={t('fields.amount')} error={errors.amount?.message}>
-          <input id="amount" type="number" step="0.01" className={controlClassWithError(!!errors.amount)} {...register('amount')} />
+          <Controller
+            control={control}
+            name="amount"
+            render={({ field }) => (
+              <CurrencyInput
+                id="amount"
+                name={field.name}
+                value={field.value}
+                onChange={field.onChange}
+                onBlur={field.onBlur}
+                className={controlClassWithError(!!errors.amount)}
+              />
+            )}
+          />
         </Field>
 
         <Field id="date" label={t('fields.date')} error={errors.date?.message}>
-          <input id="date" type="date" className={controlClassWithError(!!errors.date)} {...register('date')} />
+          <input id="date" type="date" max={todayIso()} className={controlClassWithError(!!errors.date)} {...register('date')} />
         </Field>
 
         <Field id="description" label={t('fields.description')} error={errors.description?.message}>

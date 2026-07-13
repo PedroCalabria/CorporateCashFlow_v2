@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
+import { hasFieldError } from '@/lib/api-error'
 import { useUpdateSubsidiary } from '../hooks/use-subsidiaries'
 import { updateSubsidiarySchema, type UpdateSubsidiaryFormValues } from '../schema'
 import type { Subsidiary } from '../types'
@@ -38,8 +39,8 @@ export function EditSubsidiaryDialog({
     try {
       await updateSubsidiary.mutateAsync({ id: subsidiary.id, input: values })
       onClose()
-    } catch {
-      setFormError(t('error.saveFailed'))
+    } catch (error) {
+      setFormError(hasFieldError(error, 'Code') ? t('error.codeInUse') : t('error.saveFailed'))
     }
   }
 
