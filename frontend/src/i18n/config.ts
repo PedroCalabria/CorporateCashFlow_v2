@@ -15,6 +15,8 @@ import usersEn from '@/features/users/i18n/en.json'
 import usersPtBR from '@/features/users/i18n/pt-BR.json'
 import ledgerEntriesEn from '@/features/ledger-entries/i18n/en.json'
 import ledgerEntriesPtBR from '@/features/ledger-entries/i18n/pt-BR.json'
+import bankStatementImportEn from '@/features/bank-statement-import/i18n/en.json'
+import bankStatementImportPtBR from '@/features/bank-statement-import/i18n/pt-BR.json'
 
 /**
  * i18next setup (design.md §D4). One namespace per feature: `common` holds
@@ -34,6 +36,7 @@ export const resources = {
     subsidiaries: subsidiariesEn,
     users: usersEn,
     'ledger-entries': ledgerEntriesEn,
+    'bank-statement-import': bankStatementImportEn,
   },
   'pt-BR': {
     common: commonPtBR,
@@ -42,6 +45,7 @@ export const resources = {
     subsidiaries: subsidiariesPtBR,
     users: usersPtBR,
     'ledger-entries': ledgerEntriesPtBR,
+    'bank-statement-import': bankStatementImportPtBR,
   },
 } as const
 
@@ -54,7 +58,7 @@ void i18n
     fallbackLng: 'en',
     load: 'currentOnly',
     defaultNS,
-    ns: ['common', 'app-shell', 'auth', 'subsidiaries', 'users', 'ledger-entries'],
+    ns: ['common', 'app-shell', 'auth', 'subsidiaries', 'users', 'ledger-entries', 'bank-statement-import'],
     interpolation: { escapeValue: false },
     detection: {
       order: ['localStorage', 'navigator'],

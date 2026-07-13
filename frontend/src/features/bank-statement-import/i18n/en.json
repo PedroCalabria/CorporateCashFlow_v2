@@ -1,0 +1,66 @@
+{
+  "title": "Bank Statements",
+  "subtitle": "Import bank statement files and review imported batches.",
+  "loading": "Loading batches…",
+  "empty": "No import batches match the current filters.",
+  "status": {
+    "Processed": "Processed",
+    "ProcessedWithErrors": "Processed with errors",
+    "Rejected": "Rejected"
+  },
+  "fields": {
+    "importedAt": "Imported at",
+    "fileName": "File",
+    "lines": "Lines",
+    "status": "Status",
+    "subsidiary": "Subsidiary",
+    "actions": "Actions",
+    "rejectionReason": "Reason"
+  },
+  "filter": {
+    "allSubsidiaries": "All subsidiaries",
+    "allStatuses": "All statuses",
+    "dateFrom": "From date",
+    "dateTo": "To date"
+  },
+  "placeholder": {
+    "selectSubsidiary": "Select a subsidiary…"
+  },
+  "actions": {
+    "import": "Import statement",
+    "reject": "Reject batch",
+    "cancel": "Cancel",
+    "saving": "Saving…",
+    "done": "Done"
+  },
+  "pagination": {
+    "total": "{{count}} batches",
+    "page": "Page {{page}} of {{totalPages}}",
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "import": {
+    "title": "Import bank statement",
+    "help": "Upload a CSV or XLSX file with a header row: Date, Amount, Type, Description, DocumentNumber (optional). Valid rows are imported as unmatched lines; invalid or duplicate rows are reported below.",
+    "file": "CSV or XLSX file",
+    "upload": "Upload",
+    "missingInput": "Choose a subsidiary and a file first.",
+    "created": "{{count}} lines created.",
+    "batchStatus": "Batch status: {{status}}.",
+    "rejected": "{{count}} rows were rejected:",
+    "rowLabel": "Row {{row}}"
+  },
+  "reject": {
+    "title": "Reject batch",
+    "notice": "Rejecting invalidates every line in this batch. This action is all-or-nothing and cannot be undone. A reason is required.",
+    "lineSummary": "{{count}} lines"
+  },
+  "validation": {
+    "reasonRequired": "A reason is required.",
+    "reasonTooLong": "The reason is too long."
+  },
+  "error": {
+    "loadFailed": "Could not load bank statement batches.",
+    "actionFailed": "The action could not be completed."
+  }
+}

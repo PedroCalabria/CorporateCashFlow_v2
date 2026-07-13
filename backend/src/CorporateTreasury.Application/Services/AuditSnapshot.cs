@@ -22,4 +22,17 @@ public static class AuditSnapshot
         Status = entry.Status.ToString(),
         entry.DeletionReason,
     });
+
+    /// <summary>Snapshot of a <see cref="BankStatementImportBatch"/> for the rejection audit row (design.md §D5).</summary>
+    public static string Of(BankStatementImportBatch batch) => JsonSerializer.Serialize(new
+    {
+        batch.Id,
+        batch.SubsidiaryId,
+        batch.FileName,
+        Status = batch.Status.ToString(),
+        batch.RejectedBy,
+        batch.RejectedAt,
+        batch.RejectionReason,
+        LineCount = batch.Lines.Count,
+    });
 }

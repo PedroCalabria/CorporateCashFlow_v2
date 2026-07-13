@@ -30,6 +30,10 @@ public class AppDbContext : DbContext
 
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
+    public DbSet<BankStatementImportBatch> BankStatementImportBatches => Set<BankStatementImportBatch>();
+
+    public DbSet<BankStatementLine> BankStatementLines => Set<BankStatementLine>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

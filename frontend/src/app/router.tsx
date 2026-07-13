@@ -8,6 +8,7 @@ import { SubsidiariesListPage } from '@/features/subsidiaries/components/Subsidi
 import { RequireManager } from '@/features/users/components/RequireManager'
 import { UsersListPage } from '@/features/users/components/UsersListPage'
 import { LedgerEntriesListPage } from '@/features/ledger-entries/components/LedgerEntriesListPage'
+import { BankStatementImportsListPage } from '@/features/bank-statement-import/components/BankStatementImportsListPage'
 
 /**
  * `/login` is a public route rendered OUTSIDE the shell. Everything under `/` is gated by
@@ -39,6 +40,8 @@ export const router = createBrowserRouter([
           },
           // Ledger entries: any authenticated role (the backend scopes reads and gates writes).
           { path: 'ledger-entries', element: <LedgerEntriesListPage /> },
+          // Bank statements: any authenticated role (the backend scopes reads and gates writes).
+          { path: 'bank-statement-imports', element: <BankStatementImportsListPage /> },
         ],
       },
     ],

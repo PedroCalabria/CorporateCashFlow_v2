@@ -98,6 +98,20 @@ export function SideMenu() {
               {t('nav.ledgerEntries')}
             </NavLink>
           </li>
+          {/* Bank Statements — a real link, shown to any authenticated user (scoped server-side). */}
+          <li>
+            <NavLink
+              to="/bank-statement-imports"
+              className={({ isActive }) =>
+                cn(
+                  'block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground',
+                  isActive ? 'bg-accent font-medium text-accent-foreground' : 'text-foreground/70',
+                )
+              }
+            >
+              {t('nav.bankStatements')}
+            </NavLink>
+          </li>
           {NAV_ITEM_KEYS.map((key) => (
             <li key={key}>
               <span className="block cursor-default rounded-md px-3 py-2 text-sm text-foreground/70 hover:bg-accent hover:text-accent-foreground">

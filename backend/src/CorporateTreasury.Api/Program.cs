@@ -2,11 +2,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using CorporateTreasury.Api.Auth;
 using CorporateTreasury.Application.DTOs.Auth;
+using CorporateTreasury.Application.DTOs.BankStatementImports;
 using CorporateTreasury.Application.DTOs.LedgerEntries;
 using CorporateTreasury.Application.DTOs.Subsidiaries;
 using CorporateTreasury.Application.DTOs.Users;
 using CorporateTreasury.Application.Interfaces;
 using CorporateTreasury.Application.Validators.Auth;
+using CorporateTreasury.Application.Validators.BankStatementImports;
 using CorporateTreasury.Application.Validators.LedgerEntries;
 using CorporateTreasury.Application.Validators.Subsidiaries;
 using CorporateTreasury.Application.Validators.Users;
@@ -41,6 +43,7 @@ builder.Services.AddScoped<IValidator<ResetPasswordRequest>, ResetPasswordReques
 builder.Services.AddScoped<IValidator<CreateLedgerEntryRequest>, CreateLedgerEntryRequestValidator>();
 builder.Services.AddScoped<IValidator<UpdateLedgerEntryRequest>, UpdateLedgerEntryRequestValidator>();
 builder.Services.AddScoped<IValidator<DeleteLedgerEntryRequest>, DeleteLedgerEntryRequestValidator>();
+builder.Services.AddScoped<IValidator<RejectBatchRequest>, RejectBatchRequestValidator>();
 
 // --- JWT bearer authentication (auth capability) ---
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()

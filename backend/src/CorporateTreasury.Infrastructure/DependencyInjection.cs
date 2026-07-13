@@ -69,6 +69,10 @@ public static class DependencyInjection
         services.AddScoped<IAuditLogRepository, AuditLogRepository>();
         services.AddScoped<LedgerEntryService>();
 
+        // --- Bank statement import (bank-statement-import capability) ---
+        services.AddScoped<IBankStatementImportRepository, BankStatementImportRepository>();
+        services.AddScoped<BankStatementImportService>();
+
         return services;
     }
 }

@@ -1,0 +1,66 @@
+{
+  "title": "Extratos Bancários",
+  "subtitle": "Importe arquivos de extrato bancário e revise os lotes importados.",
+  "loading": "Carregando lotes…",
+  "empty": "Nenhum lote de importação corresponde aos filtros atuais.",
+  "status": {
+    "Processed": "Processado",
+    "ProcessedWithErrors": "Processado com erros",
+    "Rejected": "Rejeitado"
+  },
+  "fields": {
+    "importedAt": "Importado em",
+    "fileName": "Arquivo",
+    "lines": "Linhas",
+    "status": "Situação",
+    "subsidiary": "Filial",
+    "actions": "Ações",
+    "rejectionReason": "Motivo"
+  },
+  "filter": {
+    "allSubsidiaries": "Todas as filiais",
+    "allStatuses": "Todas as situações",
+    "dateFrom": "Data inicial",
+    "dateTo": "Data final"
+  },
+  "placeholder": {
+    "selectSubsidiary": "Selecione uma filial…"
+  },
+  "actions": {
+    "import": "Importar extrato",
+    "reject": "Rejeitar lote",
+    "cancel": "Cancelar",
+    "saving": "Salvando…",
+    "done": "Concluir"
+  },
+  "pagination": {
+    "total": "{{count}} lotes",
+    "page": "Página {{page}} de {{totalPages}}",
+    "prev": "Anterior",
+    "next": "Próxima"
+  },
+  "import": {
+    "title": "Importar extrato bancário",
+    "help": "Envie um arquivo CSV ou XLSX com linha de cabeçalho: Date, Amount, Type, Description, DocumentNumber (opcional). As linhas válidas são importadas como não conciliadas; as linhas inválidas ou duplicadas são reportadas abaixo.",
+    "file": "Arquivo CSV ou XLSX",
+    "upload": "Enviar",
+    "missingInput": "Escolha uma filial e um arquivo primeiro.",
+    "created": "{{count}} linhas criadas.",
+    "batchStatus": "Situação do lote: {{status}}.",
+    "rejected": "{{count}} linhas foram rejeitadas:",
+    "rowLabel": "Linha {{row}}"
+  },
+  "reject": {
+    "title": "Rejeitar lote",
+    "notice": "Rejeitar invalida todas as linhas deste lote. Esta ação é do tipo tudo-ou-nada e não pode ser desfeita. É obrigatório informar um motivo.",
+    "lineSummary": "{{count}} linhas"
+  },
+  "validation": {
+    "reasonRequired": "O motivo é obrigatório.",
+    "reasonTooLong": "O motivo é muito longo."
+  },
+  "error": {
+    "loadFailed": "Não foi possível carregar os lotes de extrato bancário.",
+    "actionFailed": "A ação não pôde ser concluída."
+  }
+}

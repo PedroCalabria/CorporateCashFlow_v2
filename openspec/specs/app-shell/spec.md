@@ -56,9 +56,17 @@ The application SHALL render every screen inside a single persistent App Shell c
 - **THEN** a real "Ledger Entries" navigation link is shown, replacing its former placeholder
 - **AND** it navigates to the ledger-entries screen scoped to their role
 
+#### Scenario: Bank Statements link is real and shown to any authenticated user
+
+- **GIVEN** the `bank-statement-import` capability has been implemented
+- **AND** the user is signed in (any role)
+- **WHEN** they view the navigation area
+- **THEN** a real "Bank Statements" navigation link is shown, replacing its former placeholder
+- **AND** it navigates to the bank-statement-import screen scoped to their role
+
 #### Scenario: Not-yet-implemented capabilities remain placeholders
 
-- **GIVEN** capabilities beyond `auth`, `subsidiaries`, `user-management`, and `ledger-entries` have not been implemented yet
+- **GIVEN** capabilities beyond `auth`, `subsidiaries`, `user-management`, `ledger-entries`, and `bank-statement-import` have not been implemented yet
 - **WHEN** the authenticated user views the navigation area
 - **THEN** those entries still appear as placeholders (no real business screens)
 - **AND** the shell displays the real signed-in user (the mocked current user has been removed)
