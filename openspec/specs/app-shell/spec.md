@@ -3,9 +3,7 @@
 ## Purpose
 
 Defines the persistent application shell for CorporateCashFlow: a single App Shell (side menu with navigation area and fixed footer, plus a content outlet) that wraps every screen, and the cross-cutting language and theme preferences it exposes. This capability covers the shell layout, internationalization (English and Portuguese pt-BR), light/dark theming via Tailwind's `dark:` class strategy, and client-side persistence of these preferences. No business screens are provided; feature screens render inside the shell's content outlet via routing.
-
 ## Requirements
-
 ### Requirement: Persistent application layout
 
 The application SHALL render every screen inside a single persistent App Shell composed of a side menu (with a navigation area and a fixed footer) and a content outlet. The shell SHALL NOT be re-implemented or duplicated by individual screens; feature screens render inside its content outlet via routing. The shell SHALL render the real authenticated user (identity from the `auth` capability); it SHALL NOT be reachable without an authenticated session. The navigation area SHALL show a **real** link for each implemented business capability and a placeholder for each not-yet-implemented one; a real link SHALL respect its capability's RBAC visibility and SHALL NOT be shown to a user who is not authorized to use it.
@@ -50,9 +48,17 @@ The application SHALL render every screen inside a single persistent App Shell c
 - **WHEN** they view the navigation area
 - **THEN** the "Users" link is NOT shown (user management is Manager-only)
 
+#### Scenario: Ledger Entries link is real and shown to any authenticated user
+
+- **GIVEN** the `ledger-entries` capability has been implemented
+- **AND** the user is signed in (any role)
+- **WHEN** they view the navigation area
+- **THEN** a real "Ledger Entries" navigation link is shown, replacing its former placeholder
+- **AND** it navigates to the ledger-entries screen scoped to their role
+
 #### Scenario: Not-yet-implemented capabilities remain placeholders
 
-- **GIVEN** capabilities beyond `auth`, `subsidiaries`, and `user-management` have not been implemented yet
+- **GIVEN** capabilities beyond `auth`, `subsidiaries`, `user-management`, and `ledger-entries` have not been implemented yet
 - **WHEN** the authenticated user views the navigation area
 - **THEN** those entries still appear as placeholders (no real business screens)
 - **AND** the shell displays the real signed-in user (the mocked current user has been removed)
@@ -128,3 +134,4 @@ Language and theme preferences SHALL be persisted client-side only (browser stor
 - **GIVEN** the user has selected a language and theme in one browser
 - **WHEN** the user opens the application in a different browser or device with no saved preference
 - **THEN** the language and theme are re-detected from that environment's locale and OS preference, not inherited from the other device
+

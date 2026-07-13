@@ -2,10 +2,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using CorporateTreasury.Api.Auth;
 using CorporateTreasury.Application.DTOs.Auth;
+using CorporateTreasury.Application.DTOs.LedgerEntries;
 using CorporateTreasury.Application.DTOs.Subsidiaries;
 using CorporateTreasury.Application.DTOs.Users;
 using CorporateTreasury.Application.Interfaces;
 using CorporateTreasury.Application.Validators.Auth;
+using CorporateTreasury.Application.Validators.LedgerEntries;
 using CorporateTreasury.Application.Validators.Subsidiaries;
 using CorporateTreasury.Application.Validators.Users;
 using CorporateTreasury.Infrastructure;
@@ -36,6 +38,9 @@ builder.Services.AddScoped<IValidator<UpdateSubsidiaryRequest>, UpdateSubsidiary
 builder.Services.AddScoped<IValidator<CreateUserRequest>, CreateUserRequestValidator>();
 builder.Services.AddScoped<IValidator<UpdateUserRequest>, UpdateUserRequestValidator>();
 builder.Services.AddScoped<IValidator<ResetPasswordRequest>, ResetPasswordRequestValidator>();
+builder.Services.AddScoped<IValidator<CreateLedgerEntryRequest>, CreateLedgerEntryRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateLedgerEntryRequest>, UpdateLedgerEntryRequestValidator>();
+builder.Services.AddScoped<IValidator<DeleteLedgerEntryRequest>, DeleteLedgerEntryRequestValidator>();
 
 // --- JWT bearer authentication (auth capability) ---
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()
@@ -83,14 +88,20 @@ builder.Services.AddAuthorization(options =>
 var app = builder.Build();
 
 // --- Apply migrations + dev seed on startup (Development only) ---
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    using var scope = app.Services.CreateScope();
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
 
-    var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
-    await DevelopmentDataSeeder.SeedAsync(db, passwordHasher);
+    // Category catalog is reference data the app needs to function — seeded in every environment.
+    await CategoryReferenceSeeder.SeedAsync(db);
+
+    // The fixed dev Manager is a local-only convenience until user-management provisions real users.
+    if (app.Environment.IsDevelopment())
+    {
+        var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+        await DevelopmentDataSeeder.SeedAsync(db, passwordHasher);
+    }
 }
 
 // --- HTTP pipeline ---

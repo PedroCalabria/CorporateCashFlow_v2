@@ -68,6 +68,12 @@ context: |
     (Increase)" or "Balance Correction (Decrease)", never by editing the baseline.
   - Soft delete everywhere a delete is mentioned — never a physical DELETE on LedgerEntry
     or User.
+  - Spreadsheet imports must reject duplicates against what's ALREADY PERSISTED in the
+    database (not just duplicates within the same uploaded file), reporting them per-row
+    like any other invalid row. Applies to POST /api/ledger-entries/import (duplicate
+    criterion: Date+CategoryId+Amount+Description+SubsidiaryId) and to
+    BankStatementImportBatch (Date+Amount+Description+SubsidiaryId). Manual single-record
+    creation is never subject to this check — only bulk/file imports.
 
   OUT OF SCOPE FOR MVP: multi-bank-per-subsidiary, multi-level approval, multi-tenant,
   self-service password reset, email notifications, multi-currency, selective batch

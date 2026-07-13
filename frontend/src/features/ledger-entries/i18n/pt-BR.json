@@ -1,0 +1,96 @@
+{
+  "title": "Lançamentos",
+  "subtitle": "Registre e gerencie as movimentações internas de caixa.",
+  "loading": "Carregando lançamentos…",
+  "empty": "Nenhum lançamento corresponde aos filtros atuais.",
+  "status": {
+    "Open": "Aberto",
+    "PendingReconciliation": "Aguardando conciliação",
+    "PendingApproval": "Aguardando aprovação",
+    "Reconciled": "Conciliado",
+    "Deleted": "Excluído"
+  },
+  "entryType": {
+    "Credit": "Crédito",
+    "Debit": "Débito"
+  },
+  "categoryType": {
+    "Income": "Receita",
+    "Expense": "Despesa"
+  },
+  "fields": {
+    "date": "Data",
+    "description": "Descrição",
+    "category": "Categoria",
+    "type": "Tipo",
+    "amount": "Valor",
+    "status": "Situação",
+    "subsidiary": "Filial",
+    "actions": "Ações",
+    "deletionReason": "Motivo"
+  },
+  "filter": {
+    "allSubsidiaries": "Todas as filiais",
+    "allCategories": "Todas as categorias",
+    "allStatuses": "Todas as situações",
+    "dateFrom": "Data inicial",
+    "dateTo": "Data final"
+  },
+  "placeholder": {
+    "selectSubsidiary": "Selecione uma filial…",
+    "selectCategory": "Selecione uma categoria…"
+  },
+  "actions": {
+    "new": "Novo lançamento",
+    "import": "Importar",
+    "create": "Criar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "save": "Salvar",
+    "saving": "Salvando…",
+    "cancel": "Cancelar",
+    "done": "Concluir"
+  },
+  "pagination": {
+    "total": "{{count}} lançamentos",
+    "page": "Página {{page}} de {{totalPages}}",
+    "prev": "Anterior",
+    "next": "Próxima"
+  },
+  "create": {
+    "title": "Novo lançamento"
+  },
+  "edit": {
+    "title": "Editar lançamento"
+  },
+  "delete": {
+    "title": "Excluir lançamento",
+    "notice": "Esta é uma exclusão lógica — o lançamento é mantido para auditoria. É obrigatório informar um motivo."
+  },
+  "import": {
+    "title": "Importar lançamentos",
+    "help": "Envie um arquivo CSV ou XLSX com linha de cabeçalho: Date, CategoryCode, Amount, Description. As linhas válidas são criadas; as inválidas são reportadas abaixo.",
+    "file": "Arquivo CSV ou XLSX",
+    "upload": "Enviar",
+    "missingInput": "Escolha uma filial e um arquivo primeiro.",
+    "created": "{{count}} lançamentos criados.",
+    "rejected": "{{count}} linhas foram rejeitadas:",
+    "rowLabel": "Linha {{row}}"
+  },
+  "validation": {
+    "subsidiaryRequired": "Selecione uma filial.",
+    "categoryRequired": "Selecione uma categoria.",
+    "amountInvalid": "Informe um valor válido.",
+    "amountPositive": "O valor deve ser maior que zero.",
+    "dateRequired": "A data é obrigatória.",
+    "descriptionRequired": "A descrição é obrigatória.",
+    "descriptionTooLong": "A descrição é muito longa.",
+    "reasonRequired": "O motivo é obrigatório.",
+    "reasonTooLong": "O motivo é muito longo."
+  },
+  "error": {
+    "loadFailed": "Não foi possível carregar os lançamentos.",
+    "saveFailed": "Não foi possível salvar. Verifique os campos e tente novamente — o lançamento pode não ser editável, ou a ação está fora do seu escopo.",
+    "actionFailed": "A ação não pôde ser concluída."
+  }
+}

@@ -3,9 +3,7 @@
 ## Purpose
 
 Defines subsidiary management for CorporateCashFlow: the Global-Manager-only capability to create, list, edit, deactivate, and reactivate subsidiaries, each paired 1:1 with a bank account whose initial balance and reference date are established once at creation and are thereafter immutable. This capability enforces its authorization on the backend (a global-scoped `Manager` token), guards deactivation against active user assignments, and exposes a protected frontend route whose navigation link is visible only to the Global Manager.
-
 ## Requirements
-
 ### Requirement: Global-Manager-only access to subsidiary management
 
 Every endpoint of the subsidiaries capability SHALL require an authenticated user whose token carries a **null** `subsidiaryId` (global scope) **and** the `Manager` role. Any authenticated request whose token carries a non-null `subsidiaryId` — a subsidiary-scoped Manager, Editor, or Auditor — SHALL be rejected with `403 Forbidden`, regardless of the HTTP method (`GET`, `POST`, `PUT`, `PATCH`). A request with no valid access token SHALL be rejected with `401 Unauthorized`. This authorization is enforced on the backend and SHALL NOT depend on frontend state.
@@ -101,7 +99,7 @@ The system SHALL expose `PUT /api/subsidiaries/{id}` that updates **only** `Name
 
 ### Requirement: Deactivate a subsidiary guarded by active users
 
-The system SHALL expose `PATCH /api/subsidiaries/{id}/deactivate` that soft-deletes a subsidiary by setting `IsActive = false`. Deactivation SHALL be blocked while the subsidiary still has any active `User` assigned to it, returning a clear error and leaving the subsidiary active. Only the Global Manager may call it. (The full guard additionally forbids deactivation while any non-terminal `LedgerEntry` exists; that half of the guard is deferred until the `ledger-entries` capability exists and is tracked as an explicit TODO — see the change's `tasks.md`.)
+The system SHALL expose `PATCH /api/subsidiaries/{id}/deactivate` that soft-deletes a subsidiary by setting `IsActive = false`. Deactivation SHALL be blocked while the subsidiary still has any active `User` assigned to it, **or** while any non-terminal `LedgerEntry` (status `Open`, `PendingReconciliation`, or `PendingApproval`) exists for it — returning a clear error and leaving the subsidiary active. Deactivation SHALL succeed only when neither blocker remains (all assigned users inactive **and** every ledger entry `Reconciled` or `Deleted`). Only the Global Manager may call it. This completes the full §4 guard now that `LedgerEntry` exists (the previously-deferred half).
 
 #### Scenario: Deactivation is blocked while an active user is assigned
 
@@ -110,9 +108,16 @@ The system SHALL expose `PATCH /api/subsidiaries/{id}/deactivate` that soft-dele
 - **THEN** the request is rejected with a clear error explaining that active users are still assigned
 - **AND** the subsidiary remains `Active`
 
+#### Scenario: Deactivation is blocked while a non-terminal ledger entry exists
+
+- **GIVEN** an authenticated Global Manager and an active subsidiary with no active users but at least one `Open` (or `PendingReconciliation`/`PendingApproval`) `LedgerEntry`
+- **WHEN** they `PATCH /api/subsidiaries/{id}/deactivate`
+- **THEN** the request is rejected with a clear error explaining that non-terminal ledger entries still exist
+- **AND** the subsidiary remains `Active`
+
 #### Scenario: Deactivation succeeds with no active users assigned
 
-- **GIVEN** an authenticated Global Manager and an active subsidiary with no active `User` assigned to it
+- **GIVEN** an authenticated Global Manager and an active subsidiary with no active `User` assigned and every `LedgerEntry` either `Reconciled` or `Deleted`
 - **WHEN** they `PATCH /api/subsidiaries/{id}/deactivate`
 - **THEN** the response is `200 OK`
 - **AND** the subsidiary's `IsActive` becomes `false`
@@ -170,3 +175,4 @@ The frontend SHALL provide a protected `features/subsidiaries` route with a list
 - **WHEN** they view the App Shell navigation
 - **THEN** no "Subsidiaries" link is shown
 - **AND** navigating directly to the subsidiaries route is blocked
+

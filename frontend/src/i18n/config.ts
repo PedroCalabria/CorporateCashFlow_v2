@@ -13,6 +13,8 @@ import subsidiariesEn from '@/features/subsidiaries/i18n/en.json'
 import subsidiariesPtBR from '@/features/subsidiaries/i18n/pt-BR.json'
 import usersEn from '@/features/users/i18n/en.json'
 import usersPtBR from '@/features/users/i18n/pt-BR.json'
+import ledgerEntriesEn from '@/features/ledger-entries/i18n/en.json'
+import ledgerEntriesPtBR from '@/features/ledger-entries/i18n/pt-BR.json'
 
 /**
  * i18next setup (design.md §D4). One namespace per feature: `common` holds
@@ -31,6 +33,7 @@ export const resources = {
     auth: authEn,
     subsidiaries: subsidiariesEn,
     users: usersEn,
+    'ledger-entries': ledgerEntriesEn,
   },
   'pt-BR': {
     common: commonPtBR,
@@ -38,6 +41,7 @@ export const resources = {
     auth: authPtBR,
     subsidiaries: subsidiariesPtBR,
     users: usersPtBR,
+    'ledger-entries': ledgerEntriesPtBR,
   },
 } as const
 
@@ -50,7 +54,7 @@ void i18n
     fallbackLng: 'en',
     load: 'currentOnly',
     defaultNS,
-    ns: ['common', 'app-shell', 'auth', 'subsidiaries', 'users'],
+    ns: ['common', 'app-shell', 'auth', 'subsidiaries', 'users', 'ledger-entries'],
     interpolation: { escapeValue: false },
     detection: {
       order: ['localStorage', 'navigator'],

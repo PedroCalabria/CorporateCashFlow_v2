@@ -37,6 +37,26 @@
 - **Manager**: own subsidiary, or all subsidiaries if global.
 - **Auditor**: own subsidiary, or all subsidiaries if global. Read-only regardless of state.
 
+### 1.4 Duplicate Detection (Spreadsheet Import Only)
+
+This gap was found during implementation review and is now formalized: `POST
+/api/ledger-entries/import` must reject rows that duplicate an entry **already persisted in
+the database for that subsidiary** — not just duplicates within the same uploaded file. This
+mirrors the duplicate-prevention rule already defined for `BankStatementImportBatch` (§2),
+and exists for the same reason: protecting against the same file being imported more than
+once by mistake.
+
+- **Comparison scope**: every non-deleted `LedgerEntry` already in the database for the
+  target `SubsidiaryId` (not limited to rows within the current upload).
+- **Duplicate criterion**: same combination of `Date + CategoryId + Amount + Description +
+  SubsidiaryId` (identical hashing approach to the bank statement import rule).
+- **Effect**: a duplicate row is **rejected and reported** in the import result (row number +
+  reason `"Duplicate of an existing entry"`), exactly like any other invalid row — it is
+  never silently created, and it does not block the rest of the file's valid rows.
+- **Manual creation (`POST /api/ledger-entries`) is unaffected** — two entries with identical
+  values are legitimate when created deliberately one at a time (e.g. two coincidentally
+  identical invoices); this rule only guards against the spreadsheet re-import scenario.
+
 ---
 
 ## 2. `BankStatementImportBatch` State Machine

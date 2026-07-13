@@ -13,10 +13,12 @@ namespace CorporateTreasury.Application.Services;
 public sealed class SubsidiaryService
 {
     private readonly ISubsidiaryRepository _subsidiaries;
+    private readonly ILedgerEntryRepository _ledgerEntries;
 
-    public SubsidiaryService(ISubsidiaryRepository subsidiaries)
+    public SubsidiaryService(ISubsidiaryRepository subsidiaries, ILedgerEntryRepository ledgerEntries)
     {
         _subsidiaries = subsidiaries;
+        _ledgerEntries = ledgerEntries;
     }
 
     /// <summary>Creates the subsidiary and its bank account together (one transaction).</summary>
@@ -58,9 +60,9 @@ public sealed class SubsidiaryService
 
     /// <summary>
     /// Deactivates a subsidiary. Returns <c>null</c> if it does not exist. Throws
-    /// <see cref="Domain.Exceptions.InvalidStateTransitionException"/> when the guard blocks it
-    /// (active users still assigned) — the domain enforces the rule; this method only supplies
-    /// the active-user count.
+    /// <see cref="Domain.Exceptions.InvalidStateTransitionException"/> when the guard blocks it —
+    /// the domain enforces the full §4 rule; this method supplies both inputs: the active-user
+    /// count and whether any non-terminal ledger entry exists.
     /// </summary>
     public async Task<SubsidiaryResponse?> DeactivateAsync(Guid id, CancellationToken cancellationToken = default)
     {
@@ -71,7 +73,8 @@ public sealed class SubsidiaryService
         }
 
         var activeUserCount = await _subsidiaries.CountActiveUsersAsync(id, cancellationToken);
-        subsidiary.Deactivate(activeUserCount);
+        var hasNonTerminalEntries = await _ledgerEntries.HasNonTerminalEntriesAsync(id, cancellationToken);
+        subsidiary.Deactivate(activeUserCount, hasNonTerminalEntries);
         await _subsidiaries.SaveChangesAsync(cancellationToken);
 
         return ToResponse(subsidiary);

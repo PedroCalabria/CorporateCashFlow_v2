@@ -63,6 +63,12 @@ public static class DependencyInjection
         services.AddSingleton<IInitialPasswordGenerator, InitialPasswordGenerator>();
         services.AddScoped<UserManagementService>();
 
+        // --- Ledger entries (ledger-entries capability) ---
+        services.AddScoped<ILedgerEntryRepository, LedgerEntryRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IAuditLogRepository, AuditLogRepository>();
+        services.AddScoped<LedgerEntryService>();
+
         return services;
     }
 }

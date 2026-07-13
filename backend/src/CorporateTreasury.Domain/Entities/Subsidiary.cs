@@ -63,22 +63,27 @@ public class Subsidiary
     }
 
     /// <summary>
-    /// Deactivates the subsidiary (soft delete). Guarded: refuses while any active user is still
-    /// assigned to it (docs/business-rules-formalization.md §4, transition 3).
+    /// Deactivates the subsidiary (soft delete). Full §4 guard (transition 3): refuses while any
+    /// active user is still assigned <b>or</b> while any non-terminal <c>LedgerEntry</c>
+    /// (Open/PendingReconciliation/PendingApproval) exists for it. Both conditions must be clear.
     /// </summary>
     /// <param name="activeUserCount">Count of active users currently assigned to this subsidiary.</param>
-    /// <exception cref="InvalidStateTransitionException">Active users are still assigned.</exception>
-    public void Deactivate(int activeUserCount)
+    /// <param name="hasNonTerminalLedgerEntries">Whether any non-terminal ledger entry exists for this subsidiary.</param>
+    /// <exception cref="InvalidStateTransitionException">A blocker (active users or non-terminal entries) remains.</exception>
+    public void Deactivate(int activeUserCount, bool hasNonTerminalLedgerEntries)
     {
-        // TODO(ledger-entries): also block deactivation while any non-terminal LedgerEntry
-        // (Open/PendingReconciliation/PendingApproval) exists for this subsidiary — the full
-        // guard from business-rules-formalization.md §4, transition 3. That entity does not
-        // exist yet; add the second condition when the ledger-entries capability lands.
         if (activeUserCount > 0)
         {
             throw new InvalidStateTransitionException(
                 "The subsidiary cannot be deactivated while active users are still assigned to it.",
                 "SUBSIDIARY_HAS_ACTIVE_USERS");
+        }
+
+        if (hasNonTerminalLedgerEntries)
+        {
+            throw new InvalidStateTransitionException(
+                "The subsidiary cannot be deactivated while it has non-terminal ledger entries (Open, PendingReconciliation, or PendingApproval).",
+                "SUBSIDIARY_HAS_NON_TERMINAL_LEDGER_ENTRIES");
         }
 
         IsActive = false;

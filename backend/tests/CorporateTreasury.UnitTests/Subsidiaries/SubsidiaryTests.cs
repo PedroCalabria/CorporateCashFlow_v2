@@ -30,18 +30,31 @@ public sealed class SubsidiaryTests
     {
         var subsidiary = NewSubsidiary();
 
-        var ex = Assert.Throws<InvalidStateTransitionException>(() => subsidiary.Deactivate(activeUserCount: 1));
+        var ex = Assert.Throws<InvalidStateTransitionException>(
+            () => subsidiary.Deactivate(activeUserCount: 1, hasNonTerminalLedgerEntries: false));
 
         Assert.Equal("SUBSIDIARY_HAS_ACTIVE_USERS", ex.Code);
         Assert.True(subsidiary.IsActive); // unchanged — the guard blocked the transition
     }
 
     [Fact]
-    public void Deactivate_succeeds_when_no_active_users_are_assigned()
+    public void Deactivate_throws_when_a_non_terminal_ledger_entry_exists()
     {
         var subsidiary = NewSubsidiary();
 
-        subsidiary.Deactivate(activeUserCount: 0);
+        var ex = Assert.Throws<InvalidStateTransitionException>(
+            () => subsidiary.Deactivate(activeUserCount: 0, hasNonTerminalLedgerEntries: true));
+
+        Assert.Equal("SUBSIDIARY_HAS_NON_TERMINAL_LEDGER_ENTRIES", ex.Code);
+        Assert.True(subsidiary.IsActive);
+    }
+
+    [Fact]
+    public void Deactivate_succeeds_when_no_active_users_and_no_non_terminal_entries()
+    {
+        var subsidiary = NewSubsidiary();
+
+        subsidiary.Deactivate(activeUserCount: 0, hasNonTerminalLedgerEntries: false);
 
         Assert.False(subsidiary.IsActive);
     }
@@ -50,7 +63,7 @@ public sealed class SubsidiaryTests
     public void Reactivate_returns_the_subsidiary_to_active()
     {
         var subsidiary = NewSubsidiary();
-        subsidiary.Deactivate(activeUserCount: 0);
+        subsidiary.Deactivate(activeUserCount: 0, hasNonTerminalLedgerEntries: false);
 
         subsidiary.Reactivate();
 

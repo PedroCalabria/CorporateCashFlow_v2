@@ -24,6 +24,12 @@ public class AppDbContext : DbContext
 
     public DbSet<BankAccount> BankAccounts => Set<BankAccount>();
 
+    public DbSet<Category> Categories => Set<Category>();
+
+    public DbSet<LedgerEntry> LedgerEntries => Set<LedgerEntry>();
+
+    public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

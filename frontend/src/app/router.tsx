@@ -7,6 +7,7 @@ import { RequireGlobalManager } from '@/features/subsidiaries/components/Require
 import { SubsidiariesListPage } from '@/features/subsidiaries/components/SubsidiariesListPage'
 import { RequireManager } from '@/features/users/components/RequireManager'
 import { UsersListPage } from '@/features/users/components/UsersListPage'
+import { LedgerEntriesListPage } from '@/features/ledger-entries/components/LedgerEntriesListPage'
 
 /**
  * `/login` is a public route rendered OUTSIDE the shell. Everything under `/` is gated by
@@ -36,6 +37,8 @@ export const router = createBrowserRouter([
             element: <RequireManager />,
             children: [{ path: 'users', element: <UsersListPage /> }],
           },
+          // Ledger entries: any authenticated role (the backend scopes reads and gates writes).
+          { path: 'ledger-entries', element: <LedgerEntriesListPage /> },
         ],
       },
     ],

@@ -1,0 +1,96 @@
+{
+  "title": "Ledger Entries",
+  "subtitle": "Record and manage internal cash movements.",
+  "loading": "Loading entries…",
+  "empty": "No entries match the current filters.",
+  "status": {
+    "Open": "Open",
+    "PendingReconciliation": "Pending reconciliation",
+    "PendingApproval": "Pending approval",
+    "Reconciled": "Reconciled",
+    "Deleted": "Deleted"
+  },
+  "entryType": {
+    "Credit": "Credit",
+    "Debit": "Debit"
+  },
+  "categoryType": {
+    "Income": "Income",
+    "Expense": "Expense"
+  },
+  "fields": {
+    "date": "Date",
+    "description": "Description",
+    "category": "Category",
+    "type": "Type",
+    "amount": "Amount",
+    "status": "Status",
+    "subsidiary": "Subsidiary",
+    "actions": "Actions",
+    "deletionReason": "Reason"
+  },
+  "filter": {
+    "allSubsidiaries": "All subsidiaries",
+    "allCategories": "All categories",
+    "allStatuses": "All statuses",
+    "dateFrom": "From date",
+    "dateTo": "To date"
+  },
+  "placeholder": {
+    "selectSubsidiary": "Select a subsidiary…",
+    "selectCategory": "Select a category…"
+  },
+  "actions": {
+    "new": "New entry",
+    "import": "Import",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "done": "Done"
+  },
+  "pagination": {
+    "total": "{{count}} entries",
+    "page": "Page {{page}} of {{totalPages}}",
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "create": {
+    "title": "New ledger entry"
+  },
+  "edit": {
+    "title": "Edit ledger entry"
+  },
+  "delete": {
+    "title": "Delete ledger entry",
+    "notice": "This is a soft delete — the entry is kept for audit. A reason is required."
+  },
+  "import": {
+    "title": "Import ledger entries",
+    "help": "Upload a CSV or XLSX file with a header row: Date, CategoryCode, Amount, Description. Valid rows are created; invalid rows are reported below.",
+    "file": "CSV or XLSX file",
+    "upload": "Upload",
+    "missingInput": "Choose a subsidiary and a file first.",
+    "created": "{{count}} entries created.",
+    "rejected": "{{count}} rows were rejected:",
+    "rowLabel": "Row {{row}}"
+  },
+  "validation": {
+    "subsidiaryRequired": "Select a subsidiary.",
+    "categoryRequired": "Select a category.",
+    "amountInvalid": "Enter a valid amount.",
+    "amountPositive": "The amount must be greater than zero.",
+    "dateRequired": "A date is required.",
+    "descriptionRequired": "A description is required.",
+    "descriptionTooLong": "The description is too long.",
+    "reasonRequired": "A reason is required.",
+    "reasonTooLong": "The reason is too long."
+  },
+  "error": {
+    "loadFailed": "Could not load ledger entries.",
+    "saveFailed": "Could not save. Check the fields and try again — the entry may not be editable, or the action is outside your scope.",
+    "actionFailed": "The action could not be completed."
+  }
+}

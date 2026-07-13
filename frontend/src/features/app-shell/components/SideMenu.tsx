@@ -13,7 +13,7 @@ import { ThemeToggle } from './ThemeToggle'
  * labels (translated) with no route target — each real capability replaces its placeholder with
  * a link. See spec: "Navigation area shows placeholders only".
  */
-const NAV_ITEM_KEYS = ['dashboard', 'ledgerEntries', 'reports', 'settings'] as const
+const NAV_ITEM_KEYS = ['dashboard', 'reports', 'settings'] as const
 
 /** First letters of the first and last name parts, e.g. "Ada Lovelace" → "AL". */
 function initialsFor(name: string): string {
@@ -84,6 +84,20 @@ export function SideMenu() {
               </NavLink>
             </li>
           )}
+          {/* Ledger Entries — a real link, shown to any authenticated user (scoped server-side). */}
+          <li>
+            <NavLink
+              to="/ledger-entries"
+              className={({ isActive }) =>
+                cn(
+                  'block rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground',
+                  isActive ? 'bg-accent font-medium text-accent-foreground' : 'text-foreground/70',
+                )
+              }
+            >
+              {t('nav.ledgerEntries')}
+            </NavLink>
+          </li>
           {NAV_ITEM_KEYS.map((key) => (
             <li key={key}>
               <span className="block cursor-default rounded-md px-3 py-2 text-sm text-foreground/70 hover:bg-accent hover:text-accent-foreground">
