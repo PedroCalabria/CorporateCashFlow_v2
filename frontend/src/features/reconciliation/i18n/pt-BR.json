@@ -1,0 +1,55 @@
+{
+  "title": "Conciliação",
+  "subtitle": "Concilie lançamentos contábeis com linhas do extrato bancário e resolva divergências.",
+  "loading": "Carregando…",
+  "entries": {
+    "heading": "Lançamentos pendentes",
+    "empty": "Nenhum lançamento aguardando conciliação."
+  },
+  "lines": {
+    "heading": "Linhas do extrato não pareadas",
+    "empty": "Nenhuma linha não pareada."
+  },
+  "approvals": {
+    "heading": "Aguardando sua aprovação",
+    "empty": "Nada aguardando aprovação.",
+    "justification": "Justificativa"
+  },
+  "match": {
+    "subsidiaryMismatch": "O lançamento e a linha devem pertencer à mesma filial."
+  },
+  "status": {
+    "Open": "Aberto",
+    "PendingReconciliation": "Pendente de conciliação"
+  },
+  "fields": {
+    "justificationText": "Justificativa",
+    "rejectionReason": "Motivo da rejeição"
+  },
+  "justify": {
+    "title": "Justificar divergência",
+    "notice": "Envie uma justificativa para este lançamento. Ele passará para Aguardando Aprovação e ficará travado para edição até a decisão de um Gerente."
+  },
+  "reject": {
+    "title": "Rejeitar justificativa",
+    "notice": "A rejeição retorna o lançamento para Pendente de Conciliação. É obrigatório informar um motivo."
+  },
+  "actions": {
+    "match": "Parear selecionados",
+    "justify": "Justificar",
+    "submitJustification": "Enviar justificativa",
+    "approve": "Aprovar",
+    "reject": "Rejeitar",
+    "cancel": "Cancelar",
+    "saving": "Salvando…"
+  },
+  "validation": {
+    "justificationRequired": "É obrigatório informar uma justificativa.",
+    "reasonRequired": "É obrigatório informar um motivo.",
+    "reasonTooLong": "Texto muito longo (máximo de 1000 caracteres)."
+  },
+  "error": {
+    "loadFailed": "Não foi possível carregar o painel de conciliação.",
+    "actionFailed": "Não foi possível concluir a ação."
+  }
+}

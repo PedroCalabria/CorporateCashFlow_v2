@@ -22,20 +22,26 @@ public sealed class BankStatementImportService
     private const string EntityType = nameof(BankStatementImportBatch);
 
     private readonly IBankStatementImportRepository _batches;
+    private readonly ILedgerEntryRepository _entries;
     private readonly IAuditLogRepository _audit;
     private readonly ISubsidiaryRepository _subsidiaries;
     private readonly ICurrentUserService _currentUser;
+    private readonly IReconciliationService _reconciliation;
 
     public BankStatementImportService(
         IBankStatementImportRepository batches,
+        ILedgerEntryRepository entries,
         IAuditLogRepository audit,
         ISubsidiaryRepository subsidiaries,
-        ICurrentUserService currentUser)
+        ICurrentUserService currentUser,
+        IReconciliationService reconciliation)
     {
         _batches = batches;
+        _entries = entries;
         _audit = audit;
         _subsidiaries = subsidiaries;
         _currentUser = currentUser;
+        _reconciliation = reconciliation;
     }
 
     private Guid ActingUserId => _currentUser.UserId ?? throw new ForbiddenOperationException("No authenticated user.");
@@ -110,6 +116,11 @@ public sealed class BankStatementImportService
         }
 
         await _batches.AddAsync(batch, cancellationToken);
+
+        // Automatic matching runs synchronously in the same unit of work (design.md §D2): matched entries
+        // and lines, plus the leftover PendingReconciliation flags, commit atomically with the batch below.
+        await _reconciliation.RunAutoMatchAsync(batch, cancellationToken);
+
         await _batches.SaveChangesAsync(cancellationToken);
 
         return new ImportResult(batch.Id, batch.Status.ToString(), acceptedRows.Count, errors.OrderBy(e => e.RowNumber).ToList());
@@ -155,10 +166,68 @@ public sealed class BankStatementImportService
         await _audit.AddAsync(
             AuditLog.Create(EntityType, batch.Id, AuditAction.Rejected, ActingUserId, oldSnapshot, AuditSnapshot.Of(batch)),
             cancellationToken);
+
+        // §1.2 rule 8 / §2.2 transition 2 cascade (design.md §D5): every LedgerEntry matched (auto or
+        // manual) through this batch and still Reconciled reverts to PendingReconciliation. The single
+        // batch-level RejectionReason covers all of them — no new per-entry justification (§6 decision #4).
+        // Committed in the same SaveChanges below so the whole rejection-plus-cascade is atomic.
+        await RevertMatchedEntriesAsync(batch, request.RejectionReason, cancellationToken);
+
         await _batches.SaveChangesAsync(cancellationToken);
 
         return true;
     }
+
+    /// <summary>
+    /// Reverts every <c>Reconciled</c> ledger entry matched through <paramref name="batch"/>'s lines back to
+    /// <c>PendingReconciliation</c> (transition 8) and breaks the match links, writing one <c>Reverted</c>
+    /// audit row per affected entry referencing the batch and its reason. Does not save — the caller's
+    /// single <c>SaveChangesAsync</c> commits it atomically with the batch rejection.
+    /// </summary>
+    private async Task RevertMatchedEntriesAsync(BankStatementImportBatch batch, string reason, CancellationToken cancellationToken)
+    {
+        var matchedLines = batch.Lines.Where(l => l.MatchedLedgerEntryId is not null).ToList();
+        if (matchedLines.Count == 0)
+        {
+            return;
+        }
+
+        var entryIds = matchedLines.Select(l => l.MatchedLedgerEntryId!.Value).Distinct().ToList();
+        var entries = (await _entries.GetByIdsAsync(entryIds, cancellationToken))
+            .ToDictionary(e => e.Id);
+
+        foreach (var line in matchedLines)
+        {
+            if (entries.TryGetValue(line.MatchedLedgerEntryId!.Value, out var entry)
+                && entry.Status == LedgerEntryStatus.Reconciled)
+            {
+                var before = AuditSnapshot.Of(entry);
+                entry.RevertOnBatchRejection(batch.Id, reason);
+                await _audit.AddAsync(
+                    AuditLog.Create(
+                        nameof(LedgerEntry),
+                        entry.Id,
+                        AuditAction.Reverted,
+                        ActingUserId,
+                        before,
+                        RevertSnapshot(entry, batch.Id, reason)),
+                    cancellationToken);
+            }
+
+            line.ClearMatch();
+        }
+    }
+
+    private static string RevertSnapshot(LedgerEntry entry, Guid batchId, string reason) =>
+        System.Text.Json.JsonSerializer.Serialize(new
+        {
+            entry.Id,
+            entry.SubsidiaryId,
+            Status = entry.Status.ToString(),
+            Reason = "BatchRejected",
+            BatchId = batchId,
+            RejectionReason = reason,
+        });
 
     // --- Authorization helpers (the role/scope matrix, centralized) ---
 

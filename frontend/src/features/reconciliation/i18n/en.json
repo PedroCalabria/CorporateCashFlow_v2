@@ -1,0 +1,55 @@
+{
+  "title": "Reconciliation",
+  "subtitle": "Match ledger entries against bank statement lines, and resolve divergences.",
+  "loading": "Loading…",
+  "entries": {
+    "heading": "Pending ledger entries",
+    "empty": "No entries awaiting reconciliation."
+  },
+  "lines": {
+    "heading": "Unmatched bank statement lines",
+    "empty": "No unmatched lines."
+  },
+  "approvals": {
+    "heading": "Awaiting your approval",
+    "empty": "Nothing awaiting approval.",
+    "justification": "Justification"
+  },
+  "match": {
+    "subsidiaryMismatch": "The entry and the line must belong to the same subsidiary."
+  },
+  "status": {
+    "Open": "Open",
+    "PendingReconciliation": "Pending reconciliation"
+  },
+  "fields": {
+    "justificationText": "Justification",
+    "rejectionReason": "Rejection reason"
+  },
+  "justify": {
+    "title": "Justify divergence",
+    "notice": "Submit a justification for this entry. It will move to Pending Approval and be locked from further edits until a Manager decides."
+  },
+  "reject": {
+    "title": "Reject justification",
+    "notice": "Rejecting returns the entry to Pending Reconciliation. A reason is required."
+  },
+  "actions": {
+    "match": "Match selected",
+    "justify": "Justify",
+    "submitJustification": "Submit justification",
+    "approve": "Approve",
+    "reject": "Reject",
+    "cancel": "Cancel",
+    "saving": "Saving…"
+  },
+  "validation": {
+    "justificationRequired": "A justification is required.",
+    "reasonRequired": "A reason is required.",
+    "reasonTooLong": "This text is too long (max 1000 characters)."
+  },
+  "error": {
+    "loadFailed": "Could not load the reconciliation board.",
+    "actionFailed": "The action could not be completed."
+  }
+}

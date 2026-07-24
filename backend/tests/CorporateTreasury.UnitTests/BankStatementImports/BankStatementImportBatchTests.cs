@@ -47,13 +47,11 @@ public sealed class BankStatementImportBatchTests
     }
 
     [Fact]
-    public void New_lines_are_unmatched_and_matching_stubs_throw()
+    public void New_lines_are_unmatched()
     {
         var line = BankStatementLine.Create(Guid.NewGuid(), Subsidiary, new DateOnly(2026, 1, 5), 10m, LedgerEntryType.Debit, "x", null);
 
         Assert.Equal(BankStatementLineStatus.Unmatched, line.Status);
-        Assert.Throws<NotImplementedException>(() => line.AutoMatch(Guid.NewGuid()));
-        Assert.Throws<NotImplementedException>(() => line.ManuallyMatch(Guid.NewGuid()));
     }
 
     [Fact]

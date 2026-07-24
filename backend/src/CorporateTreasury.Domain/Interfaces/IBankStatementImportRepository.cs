@@ -20,8 +20,17 @@ public sealed record BankStatementBatchQuery(
 /// <summary>Read/write access to <see cref="BankStatementImportBatch"/> aggregates. Implemented by Infrastructure (EF Core).</summary>
 public interface IBankStatementImportRepository
 {
-    /// <summary>Loads a batch with its lines (needed so <c>Reject</c> can invalidate them).</summary>
+    /// <summary>Loads a batch with its lines (needed so <c>Reject</c> can invalidate them, and the cascade can find matched lines).</summary>
     Task<BankStatementImportBatch?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>Loads a single line by id — used by manual matching to resolve the selected line.</summary>
+    Task<BankStatementLine?> GetLineByIdAsync(Guid id, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// All <c>Unmatched</c> lines within the caller's enforced scope (<paramref name="scopeSubsidiaryId"/>
+    /// null = global) — the right-hand side of the reconciliation board.
+    /// </summary>
+    Task<IReadOnlyList<BankStatementLine>> GetUnmatchedLinesAsync(Guid? scopeSubsidiaryId, CancellationToken cancellationToken = default);
 
     /// <summary>Returns the matching page of batches plus the total count for that filter/scope.</summary>
     Task<(IReadOnlyList<BankStatementImportBatch> Items, int TotalCount)> ListAsync(BankStatementBatchQuery query, CancellationToken cancellationToken = default);

@@ -6,6 +6,7 @@
     "dashboard": "Dashboard",
     "ledgerEntries": "Ledger Entries",
     "bankStatements": "Bank Statements",
+    "reconciliation": "Reconciliation",
     "reports": "Reports",
     "settings": "Settings"
   },

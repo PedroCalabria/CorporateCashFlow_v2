@@ -102,8 +102,10 @@ public class BankStatementImportBatch
             line.Invalidate();
         }
 
-        // TODO(reconciliation): revert any LedgerEntry matched (auto or manual) from this batch back to
-        // PendingReconciliation (docs/business-rules-formalization.md §1.2 rule 8). Those match links only
-        // exist once the reconciliation capability is implemented, so there is nothing to revert here yet.
+        // The reversal of any LedgerEntry matched (auto or manual) from this batch back to
+        // PendingReconciliation (docs/business-rules-formalization.md §1.2 rule 8, §2.2 transition 2) is
+        // orchestrated in BankStatementImportService.RejectAsync (design.md §D5): the batch aggregate does
+        // not reach LedgerEntry aggregates, so the Application layer loads the matched entries, calls
+        // RevertOnBatchRejection, and commits everything in the same unit of work as this rejection.
     }
 }

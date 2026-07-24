@@ -1,3 +1,4 @@
+using CorporateTreasury.Application.Common;
 using CorporateTreasury.Application.Interfaces;
 using CorporateTreasury.Application.Services;
 using CorporateTreasury.Domain.Interfaces;
@@ -72,6 +73,12 @@ public static class DependencyInjection
         // --- Bank statement import (bank-statement-import capability) ---
         services.AddScoped<IBankStatementImportRepository, BankStatementImportRepository>();
         services.AddScoped<BankStatementImportService>();
+
+        // --- Reconciliation (reconciliation capability) ---
+        var reconciliationSettings = configuration.GetSection(ReconciliationSettings.SectionName).Get<ReconciliationSettings>()
+            ?? new ReconciliationSettings();
+        services.AddSingleton(reconciliationSettings);
+        services.AddScoped<IReconciliationService, ReconciliationService>();
 
         return services;
     }

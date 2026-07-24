@@ -23,6 +23,7 @@ public sealed class LedgerEntryConfiguration : IEntityTypeConfiguration<LedgerEn
         builder.Property(e => e.Description).IsRequired().HasMaxLength(500);
         builder.Property(e => e.DeletionReason).HasMaxLength(500);
         builder.Property(e => e.JustificationText).HasMaxLength(1000);
+        builder.Property(e => e.RejectionReason).HasMaxLength(1000);
 
         builder.HasOne<Subsidiary>()
             .WithMany()

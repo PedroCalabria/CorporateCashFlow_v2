@@ -1,4 +1,5 @@
 using CorporateTreasury.Domain.Enums;
+using CorporateTreasury.Domain.Exceptions;
 
 namespace CorporateTreasury.Domain.Entities;
 
@@ -74,15 +75,36 @@ public class BankStatementLine
     public BankStatementLineSignature Signature =>
         BankStatementLineSignature.Of(SubsidiaryId, Date, Amount, Description);
 
-    // --- Reconciliation transitions — NOT implemented in this capability (owned by reconciliation). ---
-    // Declared here so the line state machine is visible in one place and so any premature call fails
-    // loudly rather than silently corrupting state. Real signatures are designed by reconciliation.
+    // --- Reconciliation transitions (§2.3) — owned by the reconciliation capability. ---
 
-    /// <summary>Auto-match to a ledger entry → AutoMatched. TODO(reconciliation).</summary>
-    public void AutoMatch(Guid ledgerEntryId) =>
-        throw new NotImplementedException("TODO(reconciliation): §2.3 line auto-match (Unmatched → AutoMatched).");
+    /// <summary>Links this line to a ledger entry by the automatic match pass → AutoMatched. Only an <c>Unmatched</c> line can be matched.</summary>
+    /// <exception cref="InvalidStateTransitionException">The line is not <c>Unmatched</c>.</exception>
+    public void AutoMatch(Guid ledgerEntryId)
+    {
+        EnsureUnmatched();
+        MatchedLedgerEntryId = ledgerEntryId;
+        Status = BankStatementLineStatus.AutoMatched;
+    }
 
-    /// <summary>Editor manual match to a ledger entry → ManuallyMatched. TODO(reconciliation).</summary>
-    public void ManuallyMatch(Guid ledgerEntryId) =>
-        throw new NotImplementedException("TODO(reconciliation): §2.3 line manual match (Unmatched → ManuallyMatched).");
+    /// <summary>Links this line to a ledger entry chosen by an Editor → ManuallyMatched. Only an <c>Unmatched</c> line can be matched.</summary>
+    /// <exception cref="InvalidStateTransitionException">The line is not <c>Unmatched</c>.</exception>
+    public void ManuallyMatch(Guid ledgerEntryId)
+    {
+        EnsureUnmatched();
+        MatchedLedgerEntryId = ledgerEntryId;
+        Status = BankStatementLineStatus.ManuallyMatched;
+    }
+
+    /// <summary>Breaks the match link (used by the batch-rejection cascade before/with <see cref="Invalidate"/>).</summary>
+    public void ClearMatch() => MatchedLedgerEntryId = null;
+
+    private void EnsureUnmatched()
+    {
+        if (Status != BankStatementLineStatus.Unmatched)
+        {
+            throw new InvalidStateTransitionException(
+                "Only an unmatched bank statement line can be matched.",
+                "BANK_STATEMENT_LINE_NOT_UNMATCHED");
+        }
+    }
 }

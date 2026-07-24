@@ -30,6 +30,21 @@ public interface ILedgerEntryRepository
     Task<bool> HasNonTerminalEntriesAsync(Guid subsidiaryId, CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// All <c>Open</c> entries of a subsidiary (the auto-match candidate pool, §1.2 transition 3/4).
+    /// The engine matches lines against these in memory and flags the leftovers <c>PendingReconciliation</c>.
+    /// </summary>
+    Task<IReadOnlyList<LedgerEntry>> GetOpenEntriesAsync(Guid subsidiaryId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Entries in any of <paramref name="statuses"/> within the caller's enforced scope
+    /// (<paramref name="scopeSubsidiaryId"/> null = global, all subsidiaries) — powers the reconciliation board.
+    /// </summary>
+    Task<IReadOnlyList<LedgerEntry>> GetByStatusesAsync(Guid? scopeSubsidiaryId, IReadOnlyCollection<LedgerEntryStatus> statuses, CancellationToken cancellationToken = default);
+
+    /// <summary>Loads a set of entries by id — used by the batch-rejection cascade to revert entries matched through the batch (§1.2 rule 8).</summary>
+    Task<IReadOnlyList<LedgerEntry>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Duplicate-detection signatures (§1.4) of every <b>non-deleted</b> entry already persisted for the
     /// subsidiary — the set the spreadsheet import checks each valid row against so a re-imported file
     /// creates no duplicates.

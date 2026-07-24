@@ -174,8 +174,8 @@ If a **Manager** identifies excessive discrepancies within an imported bank stat
 
 ### 4.4 Balance Types
 Two distinct balance indicators are shown in the dashboard:
-- **Accounting Balance**: `InitialBalance + sum of all valid (non-deleted) CashEntries` up to the queried date, regardless of reconciliation status.
-- **Reconciled Balance**: `InitialBalance + sum of CashEntries with Status = Reconciled` up to the queried date.
+- **Accounting Balance**: `InitialBalance + sum of all valid (non-deleted) LedgerEntries` up to the queried date, regardless of reconciliation status.
+- **Reconciled Balance**: `InitialBalance + sum of LedgerEntries with Status = Reconciled` up to the queried date.
 
 ---
 

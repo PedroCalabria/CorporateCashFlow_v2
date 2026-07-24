@@ -20,6 +20,23 @@ public sealed class BankStatementImportRepository : IBankStatementImportReposito
             .Include(b => b.Lines)
             .FirstOrDefaultAsync(b => b.Id == id, cancellationToken);
 
+    public Task<BankStatementLine?> GetLineByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
+        _db.BankStatementLines.FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
+
+    public async Task<IReadOnlyList<BankStatementLine>> GetUnmatchedLinesAsync(Guid? scopeSubsidiaryId, CancellationToken cancellationToken = default)
+    {
+        var q = _db.BankStatementLines.Where(l => l.Status == BankStatementLineStatus.Unmatched);
+
+        if (scopeSubsidiaryId is Guid scope)
+        {
+            q = q.Where(l => l.SubsidiaryId == scope);
+        }
+
+        return await q
+            .OrderByDescending(l => l.Date)
+            .ToListAsync(cancellationToken);
+    }
+
     public async Task<(IReadOnlyList<BankStatementImportBatch> Items, int TotalCount)> ListAsync(BankStatementBatchQuery query, CancellationToken cancellationToken = default)
     {
         var q = _db.BankStatementImportBatches.AsQueryable();

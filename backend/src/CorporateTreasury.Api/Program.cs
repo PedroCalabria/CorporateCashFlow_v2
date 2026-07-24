@@ -4,12 +4,14 @@ using CorporateTreasury.Api.Auth;
 using CorporateTreasury.Application.DTOs.Auth;
 using CorporateTreasury.Application.DTOs.BankStatementImports;
 using CorporateTreasury.Application.DTOs.LedgerEntries;
+using CorporateTreasury.Application.DTOs.Reconciliation;
 using CorporateTreasury.Application.DTOs.Subsidiaries;
 using CorporateTreasury.Application.DTOs.Users;
 using CorporateTreasury.Application.Interfaces;
 using CorporateTreasury.Application.Validators.Auth;
 using CorporateTreasury.Application.Validators.BankStatementImports;
 using CorporateTreasury.Application.Validators.LedgerEntries;
+using CorporateTreasury.Application.Validators.Reconciliation;
 using CorporateTreasury.Application.Validators.Subsidiaries;
 using CorporateTreasury.Application.Validators.Users;
 using CorporateTreasury.Infrastructure;
@@ -44,6 +46,9 @@ builder.Services.AddScoped<IValidator<CreateLedgerEntryRequest>, CreateLedgerEnt
 builder.Services.AddScoped<IValidator<UpdateLedgerEntryRequest>, UpdateLedgerEntryRequestValidator>();
 builder.Services.AddScoped<IValidator<DeleteLedgerEntryRequest>, DeleteLedgerEntryRequestValidator>();
 builder.Services.AddScoped<IValidator<RejectBatchRequest>, RejectBatchRequestValidator>();
+builder.Services.AddScoped<IValidator<ManualMatchRequest>, ManualMatchRequestValidator>();
+builder.Services.AddScoped<IValidator<JustifyRequest>, JustifyRequestValidator>();
+builder.Services.AddScoped<IValidator<RejectRequest>, ReconciliationRejectRequestValidator>();
 
 // --- JWT bearer authentication (auth capability) ---
 var jwtOptions = builder.Configuration.GetSection(JwtOptions.SectionName).Get<JwtOptions>()

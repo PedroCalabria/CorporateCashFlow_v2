@@ -13,5 +13,8 @@ public enum AuditAction
     JustificationSubmitted,
     Approved,
     Rejected,
+
+    /// <summary>A <c>Reconciled</c> entry was reverted to <c>PendingReconciliation</c> by a batch rejection (§1.2 rule 8).</summary>
+    Reverted,
     Deleted,
 }

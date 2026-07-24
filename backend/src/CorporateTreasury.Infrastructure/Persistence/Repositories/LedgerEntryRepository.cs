@@ -73,6 +73,32 @@ public sealed class LedgerEntryRepository : ILedgerEntryRepository
                     || e.Status == LedgerEntryStatus.PendingApproval),
             cancellationToken);
 
+    public async Task<IReadOnlyList<LedgerEntry>> GetOpenEntriesAsync(Guid subsidiaryId, CancellationToken cancellationToken = default) =>
+        await _db.LedgerEntries
+            .Where(e => e.SubsidiaryId == subsidiaryId && e.Status == LedgerEntryStatus.Open)
+            .OrderBy(e => e.Date)
+            .ToListAsync(cancellationToken);
+
+    public async Task<IReadOnlyList<LedgerEntry>> GetByStatusesAsync(Guid? scopeSubsidiaryId, IReadOnlyCollection<LedgerEntryStatus> statuses, CancellationToken cancellationToken = default)
+    {
+        var q = _db.LedgerEntries.Where(e => statuses.Contains(e.Status));
+
+        if (scopeSubsidiaryId is Guid scope)
+        {
+            q = q.Where(e => e.SubsidiaryId == scope);
+        }
+
+        return await q
+            .OrderByDescending(e => e.Date)
+            .ThenByDescending(e => e.CreatedAt)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyList<LedgerEntry>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default) =>
+        await _db.LedgerEntries
+            .Where(e => ids.Contains(e.Id))
+            .ToListAsync(cancellationToken);
+
     public async Task<IReadOnlyCollection<LedgerEntrySignature>> GetExistingSignaturesAsync(Guid subsidiaryId, CancellationToken cancellationToken = default)
     {
         // Project the signature fields in SQL, then build the (normalizing) value keys in memory —
