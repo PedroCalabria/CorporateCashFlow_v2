@@ -64,9 +64,31 @@ The application SHALL render every screen inside a single persistent App Shell c
 - **THEN** a real "Bank Statements" navigation link is shown, replacing its former placeholder
 - **AND** it navigates to the bank-statement-import screen scoped to their role
 
+#### Scenario: Reconciliation link is real and shown to any authenticated user
+
+- **GIVEN** the `reconciliation` capability has been implemented
+- **AND** the user is signed in (any role)
+- **WHEN** they view the navigation area
+- **THEN** a real "Reconciliation" navigation link is shown, replacing its former placeholder
+- **AND** it navigates to the reconciliation screen scoped to their role
+
+#### Scenario: Audit Trail link is real and shown only to Manager and Auditor
+
+- **GIVEN** the `audit-trail` capability has been implemented
+- **AND** the signed-in user is a `Manager` or `Auditor` (global or subsidiary-scoped)
+- **WHEN** they view the navigation area
+- **THEN** a real "Audit Trail" navigation link is shown, replacing its former placeholder
+- **AND** it navigates to the tabbed audit-trail screen
+
+#### Scenario: Audit Trail link hidden from Editors
+
+- **GIVEN** the signed-in user is an `Editor`
+- **WHEN** they view the navigation area
+- **THEN** the "Audit Trail" link is NOT shown (Editors have no access to this capability)
+
 #### Scenario: Not-yet-implemented capabilities remain placeholders
 
-- **GIVEN** capabilities beyond `auth`, `subsidiaries`, `user-management`, `ledger-entries`, and `bank-statement-import` have not been implemented yet
+- **GIVEN** capabilities beyond `auth`, `subsidiaries`, `user-management`, `ledger-entries`, `bank-statement-import`, `reconciliation`, and `audit-trail` have not been implemented yet
 - **WHEN** the authenticated user views the navigation area
 - **THEN** those entries still appear as placeholders (no real business screens)
 - **AND** the shell displays the real signed-in user (the mocked current user has been removed)

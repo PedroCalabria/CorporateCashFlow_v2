@@ -59,4 +59,4 @@
 
 - [x] 9.1 Confirm code matches this change's spec deltas (`audit-trail`, `auth`, `app-shell`) with no undocumented behavior.
 - [x] 9.2 Confirm the application builds and runs via `docker-compose up` with no manual extra steps. `docker compose up -d --build` built the `api`/`frontend` images cleanly (new `AddAccessLogs` migration included), all three containers came up (`db` reported `Healthy`), and `GET /health` returned `{"status":"ok"}` — no manual steps beyond the standard command.
-- [ ] 9.3 Move this change to `changes/archive/` once merged, syncing `specs/audit-trail/spec.md` (new) and the `auth`/`app-shell` deltas into `openspec/specs/`.
+- [x] 9.3 Move this change to `changes/archive/` once merged, syncing `specs/audit-trail/spec.md` (new) and the `auth`/`app-shell` deltas into `openspec/specs/`.
