@@ -12,6 +12,9 @@ public interface IUserRepository
 
     Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
+    /// <summary>Batch lookup by id — used to resolve a display name for a set of actor ids (e.g. the audit-trail capability's PerformedBy/UserId columns).</summary>
+    Task<IReadOnlyList<User>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default);
+
     /// <summary>
     /// Users visible to the caller. When <paramref name="scopeSubsidiaryId"/> is null the caller is
     /// global-scoped and all users are returned; otherwise only users of that subsidiary.

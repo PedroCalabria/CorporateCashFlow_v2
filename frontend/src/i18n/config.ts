@@ -19,6 +19,8 @@ import bankStatementImportEn from '@/features/bank-statement-import/i18n/en.json
 import bankStatementImportPtBR from '@/features/bank-statement-import/i18n/pt-BR.json'
 import reconciliationEn from '@/features/reconciliation/i18n/en.json'
 import reconciliationPtBR from '@/features/reconciliation/i18n/pt-BR.json'
+import auditTrailEn from '@/features/audit-trail/i18n/en.json'
+import auditTrailPtBR from '@/features/audit-trail/i18n/pt-BR.json'
 
 /**
  * i18next setup (design.md §D4). One namespace per feature: `common` holds
@@ -40,6 +42,7 @@ export const resources = {
     'ledger-entries': ledgerEntriesEn,
     'bank-statement-import': bankStatementImportEn,
     reconciliation: reconciliationEn,
+    'audit-trail': auditTrailEn,
   },
   'pt-BR': {
     common: commonPtBR,
@@ -50,6 +53,7 @@ export const resources = {
     'ledger-entries': ledgerEntriesPtBR,
     'bank-statement-import': bankStatementImportPtBR,
     reconciliation: reconciliationPtBR,
+    'audit-trail': auditTrailPtBR,
   },
 } as const
 
@@ -62,7 +66,17 @@ void i18n
     fallbackLng: 'en',
     load: 'currentOnly',
     defaultNS,
-    ns: ['common', 'app-shell', 'auth', 'subsidiaries', 'users', 'ledger-entries', 'bank-statement-import', 'reconciliation'],
+    ns: [
+      'common',
+      'app-shell',
+      'auth',
+      'subsidiaries',
+      'users',
+      'ledger-entries',
+      'bank-statement-import',
+      'reconciliation',
+      'audit-trail',
+    ],
     interpolation: { escapeValue: false },
     detection: {
       order: ['localStorage', 'navigator'],

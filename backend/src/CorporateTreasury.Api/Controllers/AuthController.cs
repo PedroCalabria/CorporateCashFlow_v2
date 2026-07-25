@@ -55,10 +55,12 @@ public sealed class AuthController : ControllerBase
             return ValidationProblem(ModelState);
         }
 
-        var tokens = await _authService.LoginAsync(request, cancellationToken);
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        var tokens = await _authService.LoginAsync(request, ipAddress, cancellationToken);
         if (tokens is null)
         {
             // Same generic 401 for unknown email, wrong password, and inactive account.
+            // (An AccessLog LoginFailed row was still written inside AuthService — internal only.)
             return Unauthorized(new { message = InvalidCredentialsMessage });
         }
 

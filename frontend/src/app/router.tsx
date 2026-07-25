@@ -10,6 +10,8 @@ import { UsersListPage } from '@/features/users/components/UsersListPage'
 import { LedgerEntriesListPage } from '@/features/ledger-entries/components/LedgerEntriesListPage'
 import { BankStatementImportsListPage } from '@/features/bank-statement-import/components/BankStatementImportsListPage'
 import { ReconciliationBoardPage } from '@/features/reconciliation/components/ReconciliationBoardPage'
+import { AuditTrailPage } from '@/features/audit-trail/components/AuditTrailPage'
+import { RequireManagerOrAuditor } from '@/features/audit-trail/components/RequireManagerOrAuditor'
 
 /**
  * `/login` is a public route rendered OUTSIDE the shell. Everything under `/` is gated by
@@ -45,6 +47,10 @@ export const router = createBrowserRouter([
           { path: 'bank-statement-imports', element: <BankStatementImportsListPage /> },
           // Reconciliation: any authenticated role (the backend scopes reads and gates writes).
           { path: 'reconciliation', element: <ReconciliationBoardPage /> },
+          {
+            element: <RequireManagerOrAuditor />,
+            children: [{ path: 'audit-trail', element: <AuditTrailPage /> }],
+          },
         ],
       },
     ],

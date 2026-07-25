@@ -1,0 +1,63 @@
+{
+  "title": "Trilha de Auditoria",
+  "subtitle": "Revise alterações de lançamentos e eventos de acesso no seu escopo.",
+  "loading": "Carregando…",
+  "empty": "Nenhum registro corresponde aos filtros atuais.",
+  "tabs": {
+    "ledgerActivity": "Atividade de Lançamentos",
+    "accessActivity": "Atividade de Acesso"
+  },
+  "ledger": {
+    "fields": {
+      "performedAt": "Data/Hora",
+      "entityType": "Entidade",
+      "action": "Ação",
+      "performedBy": "Realizado Por"
+    },
+    "filter": {
+      "allEntityTypes": "Todas as entidades",
+      "allActions": "Todas as ações",
+      "dateFrom": "Data inicial",
+      "dateTo": "Data final"
+    },
+    "action": {
+      "Created": "Criado",
+      "Updated": "Atualizado",
+      "JustificationSubmitted": "Justificativa enviada",
+      "Approved": "Aprovado",
+      "Rejected": "Rejeitado",
+      "Reverted": "Revertido",
+      "Deleted": "Excluído"
+    }
+  },
+  "access": {
+    "fields": {
+      "timestamp": "Data/Hora",
+      "eventType": "Evento",
+      "user": "Usuário",
+      "userId": "Id do Usuário",
+      "ipAddress": "Endereço IP"
+    },
+    "filter": {
+      "allEventTypes": "Todos os eventos",
+      "userIdPlaceholder": "Filtrar por id do usuário…",
+      "dateFrom": "Data inicial",
+      "dateTo": "Data final"
+    },
+    "eventType": {
+      "LoginSuccess": "Login com sucesso",
+      "LoginFailed": "Login falhou",
+      "AccessDenied": "Acesso negado"
+    },
+    "unknownUser": "Desconhecido (e-mail não encontrado)"
+  },
+  "pagination": {
+    "total": "{{count}} registros",
+    "page": "Página {{page}} de {{totalPages}}",
+    "prev": "Anterior",
+    "next": "Próxima"
+  },
+  "error": {
+    "loadFailed": "Não foi possível carregar os registros."
+  }
+}

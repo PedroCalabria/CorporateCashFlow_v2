@@ -17,3 +17,13 @@ export function isGlobalManager(user: CurrentUser | null): boolean {
 export function isManager(user: CurrentUser | null): boolean {
   return user?.role === 'Manager'
 }
+
+/**
+ * True for a Manager or Auditor (global or subsidiary-scoped). Drives visibility of the
+ * audit-trail screen — an Editor has no access to this capability (docs/requirements-document.md
+ * §2). The backend enforces the same gate (403 for Editor) on both `/api/audit-log` and
+ * `/api/access-log`.
+ */
+export function isManagerOrAuditor(user: CurrentUser | null): boolean {
+  return user?.role === 'Manager' || user?.role === 'Auditor'
+}

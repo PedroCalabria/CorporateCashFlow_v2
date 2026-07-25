@@ -80,6 +80,11 @@ public static class DependencyInjection
         services.AddSingleton(reconciliationSettings);
         services.AddScoped<IReconciliationService, ReconciliationService>();
 
+        // --- Audit trail (audit-trail capability) ---
+        services.AddScoped<IAccessLogRepository, AccessLogRepository>();
+        services.AddScoped<AuditLogQueryService>();
+        services.AddScoped<AccessLogQueryService>();
+
         return services;
     }
 }

@@ -20,6 +20,9 @@ public sealed class UserRepository : IUserRepository
     public Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
         _db.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
+    public async Task<IReadOnlyList<User>> GetByIdsAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken = default) =>
+        await _db.Users.Where(u => ids.Contains(u.Id)).ToListAsync(cancellationToken);
+
     public async Task<IReadOnlyList<User>> ListAsync(Guid? scopeSubsidiaryId, CancellationToken cancellationToken = default)
     {
         // Null scope = global caller sees everyone; a subsidiary scope filters to that subsidiary.

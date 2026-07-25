@@ -118,6 +118,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+// Registered before authentication/authorization so its next() call wraps the entire rest of the
+// pipeline: only then does its "after next()" check see the final status code for BOTH a
+// policy-based 403 (which short-circuits without calling next()) and a manual 403 raised deep
+// inside a controller (design.md §D3 — see the middleware's own doc comment).
+app.UseMiddleware<CorporateTreasury.Api.Middleware.AccessDeniedLoggingMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

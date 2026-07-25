@@ -1,6 +1,7 @@
 using CorporateTreasury.Application.DTOs.Auth;
 using CorporateTreasury.Application.Interfaces;
 using CorporateTreasury.Domain.Entities;
+using CorporateTreasury.Domain.Enums;
 using CorporateTreasury.Domain.Interfaces;
 
 namespace CorporateTreasury.Application.Services;
@@ -13,23 +14,30 @@ namespace CorporateTreasury.Application.Services;
 /// <remarks>
 /// Both "unknown email" and "wrong password" — and an <c>Inactive</c> account — return
 /// the same generic failure (a <c>null</c> result), so responses never reveal which
-/// input was wrong (no user enumeration; spec "Login with invalid credentials").
+/// input was wrong (no user enumeration; spec "Login with invalid credentials"). Every
+/// attempt still writes an <c>AccessLog</c> row (design.md §D2): this is the only layer that
+/// already resolves the looked-up <c>User?</c> before that collapse, so it's the only place
+/// with the nullable-<c>UserId</c> distinction the audit-trail capability needs — the internal
+/// write never leaks back into the HTTP response.
 /// </remarks>
 public sealed class AuthService
 {
     private readonly IUserRepository _users;
     private readonly IRefreshTokenRepository _refreshTokens;
+    private readonly IAccessLogRepository _accessLogs;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ITokenService _tokenService;
 
     public AuthService(
         IUserRepository users,
         IRefreshTokenRepository refreshTokens,
+        IAccessLogRepository accessLogs,
         IPasswordHasher passwordHasher,
         ITokenService tokenService)
     {
         _users = users;
         _refreshTokens = refreshTokens;
+        _accessLogs = accessLogs;
         _passwordHasher = passwordHasher;
         _tokenService = tokenService;
     }
@@ -37,23 +45,35 @@ public sealed class AuthService
     /// <summary>
     /// Verify credentials and, on success for an active user, issue an access token and a
     /// freshly persisted refresh token. Returns <c>null</c> for any failure (unknown email,
-    /// wrong password, or inactive account) — the caller maps that to a generic 401.
+    /// wrong password, or inactive account) — the caller maps that to a generic 401. Every
+    /// branch writes an <c>AccessLog</c> row (<see cref="AccessLogEventType.LoginSuccess"/> or
+    /// <see cref="AccessLogEventType.LoginFailed"/>), with <c>UserId</c> null only when the
+    /// email matched no user at all.
     /// </summary>
-    public async Task<AuthTokens?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
+    public async Task<AuthTokens?> LoginAsync(LoginRequest request, string? ipAddress, CancellationToken cancellationToken = default)
     {
         var user = await _users.GetByEmailAsync(request.Email, cancellationToken);
 
         // Same generic failure whether the email is unknown, the password wrong, or the
-        // account inactive — no user enumeration.
+        // account inactive — no user enumeration. The AccessLog row still records the
+        // richer, internal-only UserId distinction; it never reaches the HTTP response.
         if (user is null || !user.IsActive)
         {
+            await _accessLogs.AddAsync(AccessLog.Create(user?.Id, AccessLogEventType.LoginFailed, ipAddress), cancellationToken);
+            await _accessLogs.SaveChangesAsync(cancellationToken);
             return null;
         }
 
         if (!_passwordHasher.Verify(user.PasswordHash, request.Password))
         {
+            await _accessLogs.AddAsync(AccessLog.Create(user.Id, AccessLogEventType.LoginFailed, ipAddress), cancellationToken);
+            await _accessLogs.SaveChangesAsync(cancellationToken);
             return null;
         }
+
+        // Staged here, flushed by the SaveChangesAsync inside IssueTokensAsync (same DbContext,
+        // same unit of work as the refresh token it persists).
+        await _accessLogs.AddAsync(AccessLog.Create(user.Id, AccessLogEventType.LoginSuccess, ipAddress), cancellationToken);
 
         return await IssueTokensAsync(user, cancellationToken);
     }

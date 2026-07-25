@@ -1,0 +1,63 @@
+{
+  "title": "Audit Trail",
+  "subtitle": "Review ledger changes and access events across your scope.",
+  "loading": "Loading…",
+  "empty": "No records match the current filters.",
+  "tabs": {
+    "ledgerActivity": "Ledger Activity",
+    "accessActivity": "Access Activity"
+  },
+  "ledger": {
+    "fields": {
+      "performedAt": "Date/Time",
+      "entityType": "Entity",
+      "action": "Action",
+      "performedBy": "Performed By"
+    },
+    "filter": {
+      "allEntityTypes": "All entities",
+      "allActions": "All actions",
+      "dateFrom": "From date",
+      "dateTo": "To date"
+    },
+    "action": {
+      "Created": "Created",
+      "Updated": "Updated",
+      "JustificationSubmitted": "Justification submitted",
+      "Approved": "Approved",
+      "Rejected": "Rejected",
+      "Reverted": "Reverted",
+      "Deleted": "Deleted"
+    }
+  },
+  "access": {
+    "fields": {
+      "timestamp": "Date/Time",
+      "eventType": "Event",
+      "user": "User",
+      "userId": "User Id",
+      "ipAddress": "IP Address"
+    },
+    "filter": {
+      "allEventTypes": "All events",
+      "userIdPlaceholder": "Filter by user id…",
+      "dateFrom": "From date",
+      "dateTo": "To date"
+    },
+    "eventType": {
+      "LoginSuccess": "Login success",
+      "LoginFailed": "Login failed",
+      "AccessDenied": "Access denied"
+    },
+    "unknownUser": "Unknown (email not found)"
+  },
+  "pagination": {
+    "total": "{{count}} records",
+    "page": "Page {{page}} of {{totalPages}}",
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "error": {
+    "loadFailed": "Could not load records."
+  }
+}
